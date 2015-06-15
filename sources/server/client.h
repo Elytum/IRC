@@ -19,11 +19,12 @@ typedef struct 		s_message
 	char			status;
 }					t_message;
 
-typedef struct
+typedef struct		s_client
 {
 	SOCKET			sock;
 	char			name[NAME_SIZE];
+	size_t			name_len;
 	t_message		message;
-}					Client;
+}					t_client;
 
 #endif /* guard */
