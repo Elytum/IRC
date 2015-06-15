@@ -34,7 +34,7 @@ print_message(message);
 	i = 0;
 	while (i < actual)
 	{
-		if (sender.sock != clients[i].sock)
+		if (sender.sock != clients[i].sock && S_ISCONNECT(clients[i]))
 			send_message(clients[i].sock, message);
 		++i;
 	}

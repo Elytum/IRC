@@ -32,8 +32,16 @@ typedef struct in_addr IN_ADDR;
 
 #define SEPARATOR " : "
 #define SEPARATOR_LEN (sizeof(SEPARATOR) - 1)
-#define DISCONNECTION_SUFFIX " : disconnected !"
+#define DISCONNECTION_SUFFIX " : disconnected !\n"
 #define DISCONNECTION_SUFFIX_LEN (sizeof(DISCONNECTION_SUFFIX) - 1)
+
+#define EXCLUDED_CHARACTERS "\n"
+
+#define CONNECTION_STRING "Please enter your pseudo\n"
+#define PSEUDO_ERROR_NAMETOOSHORT "Name too short, minimum "
+#define PSEUDO_ERROR_NAMETOOLONG "Name too long, maximum "
+#define PSEUDO_ERROR_INVALIDCHARACTER "Invalid character, name can't contain ("EXCLUDED_CHARACTERS") "
+#define PSEUDO_ERROR ", please retype\n"
 
 #include "client.h"
 
@@ -63,5 +71,6 @@ void			disconnection(int *actual, t_client clients[MAX_CLIENTS], size_t i);
 void			remove_client(t_client *clients, int to_remove, int *actual);
 void			clear_clients(t_client *clients, int actual);
 void			client_talk(int *actual, t_client clients[MAX_CLIENTS], fd_set *rdfs, char buffer[BUF_SIZE]);
-
+int				pseudo_error(t_client *client);
+void			connection_request(t_client *client);
 #endif /* guard */

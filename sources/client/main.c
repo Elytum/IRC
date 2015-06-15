@@ -57,7 +57,7 @@ static void app(const char *address, const size_t port)
             printf("Server disconnected !\n");
             break;
          }
-         puts(buffer);
+         printf("%s", buffer);
       }
    }
 

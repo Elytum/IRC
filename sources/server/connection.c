@@ -6,86 +6,17 @@
 #include "server.h"
 #include "client.h"
 
-#define EXCLUDED_CHARACTERS "\n"
-
-#define CONNECTION_STRING "Please enter your pseudo"
-#define PSEUDO_ERROR_NAMETOOSHORT "Name too short, minimum"
-#define PSEUDO_ERROR_NAMETOOLONG "Name too long, maximum "
-#define PSEUDO_ERROR_INVALIDCHARACTER "Invalid character, name can't contain ("EXCLUDED_CHARACTERS")"
-#define PSEUDO_ERROR ", please retype"
-
-char* itoa(int i, char b[]){
-    char const digit[] = "0123456789";
-    char* p = b;
-    if(i<0){
-        *p++ = '-';
-        i *= -1;
-    }
-    int shifter = i;
-    do{ //Move to where representation ends
-        ++p;
-        shifter = shifter/10;
-    }while(shifter);
-    *p = '\0';
-    do{ //Move back, inserting digits as u go
-        *--p = digit[i%10];
-        i = i/10;
-    }while(i);
-    return b;
-}
-
-static int			char_seek(const char *str, const char *chars)
+void				connection_request(t_client *client)
 {
-	char			*ptr;
-
-	ptr = (char *)chars;
-	while (*ptr)
+	client->name_len = client->message.len;
+	memcpy(client->name, client->message.content, client->name_len);
+	client->name[--client->name_len] = '\0';
+	if (!pseudo_error(client))
 	{
-		if (strchr(str, *ptr))
-			return (1);
-		++ptr;
+		printf("User '%s' just connected\n", client->name);
+		client->status |= S_IFCONNECT;
 	}
-	return (0);
-}
-
-static void			send_pseudo_error(const SOCKET sock, const char *s1, const char *s2)
-{
-	char			*str;
-	size_t			s1_len;
-	size_t			s2_len;
-
-	s1_len = strlen(s1);
-	s2_len = strlen(s2);
-	if (!(str = (char *)malloc(sizeof(char) * (s1_len + s2_len + sizeof(PSEUDO_ERROR)))))
-		return ;
-	memcpy(str, s1, s1_len);
-	memcpy(str + s1_len, s2, s2_len);
-	memcpy(str + s1_len + s2_len, PSEUDO_ERROR, sizeof(PSEUDO_ERROR));
-	send_string(sock, str, s1_len + s2_len + sizeof(PSEUDO_ERROR));
-}
-
-static int			pseudo_error(t_client *client)
-{
-	char			len_string[32];
-
-	if (client->name_len < NAME_MIN_SIZE)
-	{
-		itoa(NAME_MIN_SIZE, len_string);
-		send_pseudo_error(client->sock, PSEUDO_ERROR_NAMETOOSHORT, len_string);
-		return (1);
-	}
-	else if (client->name_len > NAME_SIZE)
-	{
-		itoa(NAME_SIZE, len_string);
-		send_pseudo_error(client->sock, PSEUDO_ERROR_NAMETOOLONG, len_string);
-		return (1);
-	}
-	else if (char_seek(client->name, EXCLUDED_CHARACTERS))
-	{
-		send_pseudo_error(client->sock, PSEUDO_ERROR_INVALIDCHARACTER, "");
-		return (1);
-	}
-	return (0);
+	printf("Init pseudo = [%s]\n", client->name);
 }
 
 /*
@@ -95,7 +26,7 @@ static int			pseudo_error(t_client *client)
 int					client_status_update(const SOCKET sock, char buffer[BUF_SIZE], t_client *client)
 {
 	SOCKADDR_IN		csin = { 0 };
-	socklen_t		sinsize = sizeof csin;
+	socklen_t		sinsize = sizeof (csin);
 	int				csock = accept(sock, (SOCKADDR *)&csin, &sinsize);
 	size_t			len;
 
@@ -106,16 +37,9 @@ int					client_status_update(const SOCKET sock, char buffer[BUF_SIZE], t_client 
 	}
 	client->sock = csock;
 	client->message.content = NULL;
+	client->message.len = 0;
+	client->status = 0;
 	send_string(client->sock, CONNECTION_STRING, sizeof(CONNECTION_STRING));
-	client->name_len = 0;
-	if ((client->name_len = read_client(client->sock, client->name, NAME_SIZE)) == -1)
-		return (0);
-	while (pseudo_error(client))
-	{
-		if ((client->name_len = read_client(client->sock, client->name, NAME_SIZE)) == -1)
-			return (0);
-	}
-client->name[--client->name_len] = '\0';
 	return (csock);
 }
 
