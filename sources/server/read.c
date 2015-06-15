@@ -15,7 +15,6 @@ int			read_client(SOCKET sock, char *buffer, const size_t len)
 	int		n;
 
 	n = 0;
-	// if ((n = recv(sock, buffer, len, 0)) < 0)
 	if ((n = recv(sock, buffer, len, 0)) < 0)
 	{
 		perror("recv()");

@@ -41,7 +41,8 @@ static int		init_connection(void);
 
 //Messages_handling
 
-void			write_message(SOCKET sock, const t_message message);
+void			send_message(SOCKET sock, const t_message message);
+void			send_string(SOCKET sock, const char *message, const size_t len);
 void			send_message_to_all_clients(const t_client *clients, const t_client sender, const int actual);
 void			clear_message(t_message *message);
 void			add_message(t_message *message, char buffer[BUF_SIZE], int c);

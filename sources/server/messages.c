@@ -35,7 +35,7 @@ print_message(message);
 	while (i < actual)
 	{
 		if (sender.sock != clients[i].sock)
-			write_message(clients[i].sock, message);
+			send_message(clients[i].sock, message);
 		++i;
 	}
 	free(message.content);
@@ -45,9 +45,22 @@ print_message(message);
 **		Write a t_message to a socket.
 */
 
-void				write_message(SOCKET sock, const t_message message)
+void				send_message(SOCKET sock, const t_message message)
 {
 	if (send(sock, message.content, message.len, 0) < 0)
+	{
+		perror("send()");
+		exit(errno);
+	}
+}
+
+/*
+**		Write a string to a socket.
+*/
+
+void				send_string(SOCKET sock, const char *message, const size_t len)
+{
+	if (send(sock, message, len, 0) < 0)
 	{
 		perror("send()");
 		exit(errno);

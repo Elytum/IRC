@@ -8,7 +8,11 @@
 #define S_IFERROR 0b00000010
 #define S_ISERROR(m) (m.status & S_IFERROR)
 
+#define S_IFTALK 0
+#define S_ISTALK(c) (c.message.effect == 0)
+
 #define NAME_SIZE 9
+#define NAME_MIN_SIZE 5
 
 typedef struct 		s_message
 {
@@ -17,6 +21,7 @@ typedef struct 		s_message
 	size_t			pos;
 	size_t			max;
 	char			status;
+	char			effect;
 }					t_message;
 
 typedef struct		s_client

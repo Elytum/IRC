@@ -62,6 +62,7 @@ static void	update_message(t_message *message)
 	{
 		*tmp = '\0';
 		message->len = tmp - message->content;
+		message->effect = S_IFTALK;
 		message->status |= S_IFREADY;
 	}
 }

@@ -5,15 +5,13 @@
 
 #include "client.h"
 
-static void app(const char *address, char *name)
+static void app(const char *address, const size_t port)
 {
-   SOCKET sock = init_connection(address);
+   SOCKET sock = init_connection(address, port);
    char buffer[BUF_SIZE];
 
    fd_set rdfs;
 
-   /* send our name */
-   write_server(sock, name);
 
    while(1)
    {
@@ -66,7 +64,7 @@ static void app(const char *address, char *name)
    end_connection(sock);
 }
 
-static int init_connection(const char *address)
+static int init_connection(const char *address, const size_t port)
 {
    SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
    SOCKADDR_IN sin = { 0 };
@@ -86,7 +84,7 @@ static int init_connection(const char *address)
    }
 
    sin.sin_addr = *(IN_ADDR *) hostinfo->h_addr;
-   sin.sin_port = htons(PORT);
+   sin.sin_port = htons(port);
    sin.sin_family = AF_INET;
 
    if(connect(sock,(SOCKADDR *) &sin, sizeof(SOCKADDR)) == SOCKET_ERROR)
@@ -134,13 +132,13 @@ static void write_server(SOCKET sock, char *buffer)
 
 int main(int argc, char **argv)
 {
-   if(argc < 2)
+   if (argc < 3)
    {
-      printf("Usage : %s [address] [pseudo]\n", argv[0]);
+      printf("Usage : %s [address] [port]\n", argv[0]);
       return EXIT_FAILURE;
    }
 
-   app(argv[1], argv[2]);
+   app(argv[1], atoi(argv[2]));
 
    return EXIT_SUCCESS;
 }
