@@ -51,7 +51,7 @@ int					ft_delete(t_env *e, char *inputs)
 	return (0);
 }
 
-static void			ft_lstr_inputsinit(t_env *e)
+void				ft_lstr_inputsinit(t_env *e)
 {
 	if (!(e->histo))
 		ft_lststr_add(&(e->histo), ft_lststr_new(""));
@@ -63,7 +63,7 @@ static void			ft_lstr_inputsinit(t_env *e)
 	}
 }
 
-static int			ft_manage_inputs(t_env *e, char *inputs)
+int					ft_manage_inputs(t_env *e, char *inputs)
 {
 	int				value;
 
@@ -107,42 +107,4 @@ char				*ft_get_inputs(char *str)
 	pause_termcaps();
 	ft_endline(e);
 	return (e->str);
-}
-
-char				*ft_get_char(char *str)
-{
-	static t_env	*e = NULL;
-	char			inputs[7];
-	int				value;
-	static int		initialized = 0;
-
-	if (initialized == 0)
-	{
-		if (!e && (!(e = (t_env *)ft_memalloc(sizeof(t_env)))))
-			exit (0);
-		e->index = 0;
-		e->max = 0;
-		if (!(e->str = (char *)ft_memalloc(sizeof(char))))
-			return (NULL);
-		ft_bzero(inputs, 7);
-		ft_clean_histo(e);
-		ft_lstr_inputsinit(e);
-		tputs(e->name, 1, ft_putc);
-	}
-	e->name = str;
-	e->buf = start_termcaps();
-	if ((read(0, inputs, 7)) != EOF)
-	{
-		if ((value = ft_manage_inputs(e, inputs)) >= 0)
-			return (e->str);
-	}
-	pause_termcaps();
-	if (strchr(e->str, '\n'))
-	{
-		ft_endline(e);
-		ft_lstr_inputsinit(e);
-		return (e->str);
-	}
-	else
-		return (NULL);
 }

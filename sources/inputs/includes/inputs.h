@@ -66,12 +66,20 @@ typedef struct		s_env
 	char			*name;
 	size_t			index;
 	size_t			max;
+	size_t			save;
 	t_str			*histo;
 	t_str			*phisto;
 }					t_env;
 
 char		*ft_get_inputs(char *str);
-char		*ft_get_char(char *str);
+char		*ft_dynamic_get(char *str);
+
+void			ft_dynamic_pause(void);
+void			ft_dynamic_clean(void);
+void			ft_dynamic_restore(void);
+
+void				ft_lstr_inputsinit(t_env *e);
+int					ft_manage_inputs(t_env *e, char *inputs);
 
 int			ft_arrows(t_env *e, char *inputs);
 void		ft_arrows2(t_env *e, char kind);

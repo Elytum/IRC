@@ -38,38 +38,19 @@ static void app(SOCKET sock)
          exit(errno);
       }
 
-      /* something from standard input : i.e keyboard */
-      if(FD_ISSET(STDIN_FILENO, &rdfs))
+      if (FD_ISSET(STDIN_FILENO, &rdfs))
       {
-         printf("Before\n");
-         printf("\tIN\n");
-   buffer = ft_get_inputs("> ");
-         printf("\tOUT\n");
-   // buffer = ft_get_char("> ");
-   // read(1, buffer, 1);
-         // fgets(buffer, BUF_SIZE - 1, stdin);
-         // {
-            char *p = NULL;
-            p = strstr(buffer, "\n");
-            if (p != NULL)
-            {
-               *p = 0;
-            }
-            else
-            {
-               /* fclean */
-               buffer[BUF_SIZE - 1] = 0;
-            }
-         // }
-            printf("Buffer [%s]\n", buffer);
-      write_server(sock, buffer);
-         free(buffer);
-         printf("After\n");
+         buffer = ft_dynamic_get("> ");
+if (buffer)
+{
+   write_server(sock, buffer);
+   free(buffer);
+}
       }
       else if(FD_ISSET(sock, &rdfs))
       {
+         ft_dynamic_clean();
          int n = read_server(sock, &buffer);
-//                  int n = -1;
          /* server down */
          if (n == 0)
          {
@@ -78,6 +59,7 @@ static void app(SOCKET sock)
          }
          else if (n != -1)
             printf("%s", buffer);
+         ft_dynamic_restore();
       }
    }
 
@@ -203,7 +185,7 @@ int main(int argc, char **argv)
       printf("Please connect to a server:\n");
       while (42)
       {
-         buffer = ft_get_inputs("");
+         buffer = ft_get_inputs("> ");
          if (buffer[0] == '/')
          {
             if (command_match(buffer + 1, "nick") ||
