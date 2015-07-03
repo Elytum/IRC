@@ -16,9 +16,9 @@ void			ft_goleft(t_env *e)
 {
 	int			n;
 
-	if (e->str[e->index - 1] == '\t')
-		n = 1;
-	else
+	// if (e->str[e->index - 1] == '\t')
+	// 	n = 1;
+	// else
 		n = 1;
 	// if (tgetflag("bw"))
 	// {
@@ -35,9 +35,9 @@ void			ft_goright(t_env *e)
 	int			n;
 	char		tmp[2];
 
-	if (e->str[e->index] == '\t')
-		n = 1;
-	else
+	// if (e->str[e->index] == '\t')
+	// 	n = 1;
+	// else
 		n = 1;
 	while (n-- > 0)
 	{

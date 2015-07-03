@@ -40,7 +40,9 @@ static void app(SOCKET sock)
 
       if (FD_ISSET(STDIN_FILENO, &rdfs))
       {
-         if ((buffer = ft_dynamic_get()))
+         static char *test = ">";
+         test = ft_strjoin(test, ">");
+         if ((buffer = ft_dynamic_get(test)))
          {
             write_server(sock, buffer);
             free(buffer);
@@ -162,13 +164,15 @@ static void write_server(SOCKET sock, char *buffer)
 {
    size_t len;
 
-   len = strlen(buffer);
-   buffer[len] = '\n';
-   buffer[len + 1] = '\n';
-   if(send(sock, buffer, len + 1, 0) < 0)
+   if ((len = strlen(buffer)))
    {
-      perror("send()");
-      exit(errno);
+      buffer[len - 1] = '\n';
+      // buffer[len + 1] = '\n';
+      if (send(sock, buffer, len + 1, 0) < 0)
+      {
+         perror("send()");
+         exit(errno);
+      }
    }
 }
 

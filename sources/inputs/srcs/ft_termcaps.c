@@ -74,7 +74,7 @@ char				*start_termcaps(void)
 	sing = termcaps_sing(GET_SING);
 	if (sing == NEVERSET_SING)
 	{
-		if (!(buf = (char *)ft_memalloc(sizeof(char) * 2048)) ||
+		if (!(buf = (char *)ft_memalloc(sizeof(char) * 2048 * 4)) ||
 			tgetent(buf, NULL) < 1)
 			exit(-1);
 		tcgetattr(0, &term), old_term_sing(&term);
