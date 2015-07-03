@@ -16,7 +16,8 @@ static void	ft_shellup(t_env *e)
 {
 	if (e->phisto->next)
 	{
-		ft_clear_input(e);
+		if (*e->str)
+			ft_clear_input(e);
 		free(e->phisto->tmp);
 		e->phisto->tmp = ft_strdup(e->str);
 		e->phisto = e->phisto->next;

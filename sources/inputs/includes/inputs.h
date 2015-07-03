@@ -70,6 +70,9 @@ typedef struct		s_env
 	t_str			*phisto;
 }					t_env;
 
+char		*ft_get_inputs(char *str);
+char		*ft_get_char(char *str);
+
 int			ft_arrows(t_env *e, char *inputs);
 void		ft_arrows2(t_env *e, char kind);
 char		*ft_chardup(char c);
@@ -83,7 +86,6 @@ int			ft_process_back_delete(t_env *e);
 int			ft_clear(t_env *e, char *inputs);
 int			ft_quit(t_env *e, char *inputs);
 int			ft_delete(t_env *e, char *inputs);
-char		*ft_get_inputs(char *str);
 void		ft_lststr_add(t_str **lst, t_str *new);
 t_str		*ft_lststr_new(char *str);
 void		ft_goleft(t_env *e);
