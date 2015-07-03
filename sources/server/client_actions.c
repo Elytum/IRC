@@ -14,7 +14,8 @@
 
 void			interprate_message(t_client clients[MAX_CLIENTS], t_client *client, int *actual)
 {
-	if (S_ISTALK((*client)))
+	if (S_ISTALK((*client)) &&
+		!(client->message.len == 1 && client->message.content[0] == '\n'))
 		send_message_to_all_clients(clients, *client, (*actual));
 }
 

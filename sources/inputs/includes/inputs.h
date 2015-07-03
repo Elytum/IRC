@@ -72,7 +72,7 @@ typedef struct		s_env
 }					t_env;
 
 char		*ft_get_inputs(char *str);
-char		*ft_dynamic_get(char *str);
+char		*ft_dynamic_get(void);
 
 void			ft_dynamic_pause(void);
 void			ft_dynamic_clean(void);

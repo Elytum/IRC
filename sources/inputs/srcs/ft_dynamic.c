@@ -21,7 +21,7 @@ static t_env		*sing_env(t_env *var)
 	return (ptr);
 }
 
-char				*ft_dynamic_get(char *str)
+char				*ft_dynamic_get(void)
 {
 	static t_env	*e = NULL;
 	char			inputs[7];
@@ -42,15 +42,13 @@ char				*ft_dynamic_get(char *str)
 			return (NULL);
 		ft_clean_histo(e);
 		ft_lstr_inputsinit(e);
-		tputs(e->name, 1, ft_putc);
 		e->buf = start_termcaps();
+		e->name = "";
 	}
-	e->name = str;
 	if ((read(0, inputs, 7)) != EOF)
 		value = ft_manage_inputs(e, inputs);
 	if (value >= 0)
 	{
-		ft_endline(e);
 		ft_lstr_inputsinit(e);
 		e->index = 0;
 		e->max = 0;
@@ -90,6 +88,7 @@ void			ft_dynamic_restore(void)
 	if (e && e->str)
 	{
 		tputs(e->str, 1, ft_putc);
+		e->index = e->max;
 		while (e->index > e->save)
 			ft_goleft(e);
 	}

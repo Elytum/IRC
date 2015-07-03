@@ -40,12 +40,11 @@ static void app(SOCKET sock)
 
       if (FD_ISSET(STDIN_FILENO, &rdfs))
       {
-         buffer = ft_dynamic_get("> ");
-if (buffer)
-{
-   write_server(sock, buffer);
-   free(buffer);
-}
+         if ((buffer = ft_dynamic_get()))
+         {
+            write_server(sock, buffer);
+            free(buffer);
+         }
       }
       else if(FD_ISSET(sock, &rdfs))
       {
