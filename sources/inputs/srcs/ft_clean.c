@@ -20,11 +20,11 @@ int			ft_clear_input(t_env *e)
 	if (((ft_strlen(e->name) + ft_strlen(e->str)) % tgetnum("co")) == 0)
 	{
 		len--;
-		tputs(tgetstr("bl", (char **)(&e->buf)), 1, ft_putc);
+		tputs(tgetstr("bl", NULL), 1, ft_putc);
 	}
 	while (len--)
-		tputs(tgetstr("le", (char **)(&e->buf)), 1, ft_putc);
-	tputs(tgetstr("cd", (char **)(&e->buf)), 1, ft_putc);
+		tputs(tgetstr("le", NULL), 1, ft_putc);
+	tputs(tgetstr("cd", NULL), 1, ft_putc);
 	return (0);
 }
 

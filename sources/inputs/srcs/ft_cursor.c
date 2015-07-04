@@ -19,7 +19,7 @@ void		ft_update_input(t_env *e)
 	tputs(e->str, 1, ft_putc);
 	len = e->max - e->index;
 	while (len--)
-		tputs(tgetstr("le", (char **)(&e->buf)), 1, ft_putc);
+		tputs(tgetstr("le", NULL), 1, ft_putc);
 }
 
 void		ft_endline(t_env *e)

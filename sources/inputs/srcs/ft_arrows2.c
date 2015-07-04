@@ -18,7 +18,7 @@ static void	ft_cursorup(t_env *e)
 
 	len = tgetnum("co");
 	if (!e->index)
-		tputs(tgetstr("bl", (char **)(&e->buf)), 1, ft_putc);
+		tputs(tgetstr("bl", NULL), 1, ft_putc);
 	while (e->index && len--)
 		ft_goleft(e);
 }
@@ -29,7 +29,7 @@ static void	ft_cursordown(t_env *e)
 
 	len = tgetnum("co");
 	if (e->index == e->max)
-		tputs(tgetstr("bl", (char **)(&e->buf)), 1, ft_putc);
+		tputs(tgetstr("bl", NULL), 1, ft_putc);
 	while (e->index != e->max && len--)
 		ft_goright(e);
 }
@@ -37,7 +37,7 @@ static void	ft_cursordown(t_env *e)
 static void	ft_cursorleft(t_env *e)
 {
 	if (!e->index)
-		tputs(tgetstr("bl", (char **)(&e->buf)), 1, ft_putc);
+		tputs(tgetstr("bl", NULL), 1, ft_putc);
 	else
 	{
 		if (e->index && e->str[e->index] != ' ')
@@ -54,7 +54,7 @@ static void	ft_cursorleft(t_env *e)
 static void	ft_cursorright(t_env *e)
 {
 	if (e->index == e->max)
-		tputs(tgetstr("bl", (char **)(&e->buf)), 1, ft_putc);
+		tputs(tgetstr("bl", NULL), 1, ft_putc);
 	else
 	{
 		if (e->index && e->str[e->index] != ' ')

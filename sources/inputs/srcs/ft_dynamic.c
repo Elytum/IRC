@@ -21,7 +21,7 @@ static t_env		*sing_env(t_env *var)
 	return (ptr);
 }
 
-char				*ft_dynamic_get(void)
+char				*ft_dynamic_get(char *str)
 {
 	static t_env	*e = NULL;
 	char			inputs[7];
@@ -43,12 +43,21 @@ char				*ft_dynamic_get(void)
 		ft_clean_histo(e);
 		ft_lstr_inputsinit(e);
 		e->buf = start_termcaps();
-		e->name = "";
+		e->name = strdup(str);
+	}
+	else if (strcmp(e->name, str))
+	{
+		ft_dynamic_clean();
+		free(e->name);
+		e->name = strdup(str);
+		ft_dynamic_restore();
+
 	}
 	if ((read(0, inputs, 7)) != EOF)
 		value = ft_manage_inputs(e, inputs);
 	if (value >= 0)
 	{
+		tputs(e->name, 1, ft_putc);
 		ft_lstr_inputsinit(e);
 		e->index = 0;
 		e->max = 0;
@@ -74,9 +83,13 @@ void			ft_dynamic_clean(void)
 	if (e && e->str)
 	{
 		e->save = e->index;
+		e->index += strlen(e->name);
 		while (e->index > 0)
-			ft_goleft(e);
-		tputs(tgetstr("cd", (char **)(&e->buf)), 1, ft_putc);
+		{
+			--e->index;
+			tputs(tgetstr("le", NULL), 1, ft_putc);
+		}
+		tputs(tgetstr("cd", NULL), 1, ft_putc);
 	}
 }
 
@@ -87,9 +100,13 @@ void			ft_dynamic_restore(void)
 	e = sing_env(NULL);
 	if (e && e->str)
 	{
+		tputs(e->name, 1, ft_putc);
 		tputs(e->str, 1, ft_putc);
 		e->index = e->max;
 		while (e->index > e->save)
-			ft_goleft(e);
+		{
+			--e->index;
+			tputs(tgetstr("le", NULL), 1, ft_putc);
+		}
 	}
 }
