@@ -56,15 +56,22 @@ void				disconnection(int *actual, t_client clients[MAX_CLIENTS], size_t i)
 	closesocket(clients[i].sock);
 	remove_client(clients, i, actual);
 	free(disconnected.message.content);
-	disconnected.message.len = disconnected.name_len + DISCONNECTION_SUFFIX_LEN;
+	disconnected.message.len = ANSI_COLOR_RED_LEN + disconnected.name_len + DISCONNECTION_SUFFIX_LEN + ANSI_COLOR_RESET_LEN;
 	if (!(disconnected.message.content = (char *)malloc(sizeof(char) * (disconnected.message.len))))
 		return ;
 	memcpy(disconnected.message.content,
+			ANSI_COLOR_RED,
+			ANSI_COLOR_RED_LEN);
+	memcpy(disconnected.message.content + ANSI_COLOR_RED_LEN,
 			disconnected.name,
 			disconnected.name_len);
-	memcpy(disconnected.message.content + disconnected.name_len,
+	memcpy(disconnected.message.content + ANSI_COLOR_RED_LEN + disconnected.name_len,
 			DISCONNECTION_SUFFIX,
 			DISCONNECTION_SUFFIX_LEN);
+	memcpy(disconnected.message.content + ANSI_COLOR_RED_LEN + disconnected.name_len + DISCONNECTION_SUFFIX_LEN,
+			ANSI_COLOR_RESET,
+			ANSI_COLOR_RESET_LEN);
+
 	c = 0;
 	while (c < (*actual))
 	{

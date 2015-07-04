@@ -57,7 +57,7 @@ static void app(SOCKET sock)
             break;
          }
          else if (n != -1)
-            printf("%s", buffer);
+            write(1, buffer, n);
          ft_dynamic_restore();
       }
    }
@@ -134,12 +134,25 @@ static void end_connection(int sock)
    closesocket(sock);
 }
 
+/**/
+                                          // void  dumpString(char *str, size_t len) {
+                                          //    while (len--) {
+                                          //       // ft_putnbr(*str++);
+                                          //       write(1, str++, 1);
+                                          //       if (len)
+                                          //          write(1, " ", 1);
+                                          //       else
+                                          //          write(1, "\n", 1);
+                                          //    }
+                                          // }
+/**/
+
 static int read_server(SOCKET sock, char **buffer)
 {
    int   n = BUF_SIZE - 1;
    int   total = 0; 
    char  *tmp;
-   char  buf[BUF_SIZE];
+   char  buf[n];
 
    *buffer = NULL;
    while (n == BUF_SIZE - 1)
@@ -149,11 +162,16 @@ static int read_server(SOCKET sock, char **buffer)
          perror("recv()");
          exit(errno);
       }
-      buf[n] = 0;
-      tmp = ft_strjoin(*buffer, buf);
+      if (!(tmp = (char *)malloc(sizeof(char) * total + n)))
+         exit(1);
+      memcpy(tmp, *buffer, total);
+      memcpy(tmp + total, buf, n);
       free(*buffer);
       *buffer = tmp;
       total += n;
+      if (total > 1 && (*buffer)[0] != '\0' && (
+         (*buffer)[total - 1] == '\n' || (*buffer)[total - 1] == '\0'))
+         break ;
    }
    return total;
 }
@@ -229,6 +247,10 @@ int main(int argc, char **argv)
                         break ;
                      }
                   }
+                  else if (*ptr != '\0')
+                     printf("Wrong format, should be \"/connect <address> <port>\".\n");
+                  else
+                     printf("Wrong format, port must be a number.\n");
                }
             }
             else
