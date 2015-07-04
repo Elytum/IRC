@@ -40,9 +40,7 @@ static void app(SOCKET sock)
 
       if (FD_ISSET(STDIN_FILENO, &rdfs))
       {
-         static char *test = ">";
-         test = ft_strjoin(test, ">");
-         if ((buffer = ft_dynamic_get(test)))
+         if ((buffer = ft_dynamic_get("> ")))
          {
             write_server(sock, buffer);
             free(buffer);
@@ -163,16 +161,21 @@ static int read_server(SOCKET sock, char **buffer)
 static void write_server(SOCKET sock, char *buffer)
 {
    size_t len;
+   char     *tmp;
 
    if ((len = strlen(buffer)))
    {
-      buffer[len - 1] = '\n';
-      // buffer[len + 1] = '\n';
-      if (send(sock, buffer, len + 1, 0) < 0)
+      if (!(tmp = (char *)malloc(sizeof(char) * len + 1)))
+         exit (1);
+      memcpy(tmp, buffer, len);
+      tmp[len] = '\n';
+      if (send(sock, tmp, len + 1, 0) < 0)
       {
+         free(tmp);
          perror("send()");
          exit(errno);
       }
+      free(tmp);
    }
 }
 

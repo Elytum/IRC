@@ -22,9 +22,9 @@ void			ft_goleft(t_env *e)
 		n = 1;
 	// if (tgetflag("bw"))
 	// {
-		while (n-- > 0)
+		while (n-- > 0 && e->index > 0)
 		{
-			tputs(tgetstr("le", (char **)(&e->buf)), 1, ft_putc);
+			tputs(tgetstr("le", NULL), 1, ft_putc);
 			e->index--;
 		}
 	// }
@@ -39,7 +39,7 @@ void			ft_goright(t_env *e)
 	// 	n = 1;
 	// else
 		n = 1;
-	while (n-- > 0)
+	while (n-- > 0 && e->index < e->max)
 	{
 		tmp[1] = '\0';
 		tmp[0] = e->str[e->index++];

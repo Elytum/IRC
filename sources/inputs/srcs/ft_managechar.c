@@ -30,7 +30,7 @@ static void	ft_process_lchar(t_env *e, char *inputs)
 	size_t	len;
 	int		flag;
 
-	tputs(tgetstr("cd", (char **)(&e->buf)), 1, ft_putc);
+	tputs(tgetstr("cd", NULL), 1, ft_putc);
 	tmp2 = ft_strndup(e->str, e->index);
 	tmp = ft_strjoin(tmp2, inputs);
 	free(tmp2);

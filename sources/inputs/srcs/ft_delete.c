@@ -19,7 +19,7 @@ int			ft_process_delete(t_env *e)
 	if (e->index > 0)
 	{
 		ft_goleft(e);
-		tputs(tgetstr("sc", (char **)(&e->buf)), 1, ft_putc);
+		tputs(tgetstr("sc", NULL), 1, ft_putc);
 		e->index++;
 		e->str[e->index - 1] = '\0';
 		tmp = ft_strjoin(e->str, e->str + e->index);
@@ -29,7 +29,7 @@ int			ft_process_delete(t_env *e)
 		e->index--;
 		tputs(e->str + e->index, 1, ft_putc);
 		tputs(" \0", 1, ft_putc);
-		tputs(tgetstr("rc", (char **)(&e->buf)), 1, ft_putc);
+		tputs(tgetstr("rc", NULL), 1, ft_putc);
 	}
 	return (0);
 }
@@ -40,7 +40,7 @@ int			ft_process_back_delete(t_env *e)
 
 	if (e->index < e->max)
 	{
-		tputs(tgetstr("sc", (char **)(&e->buf)), 1, ft_putc);
+		tputs(tgetstr("sc", NULL), 1, ft_putc);
 		e->str[e->index] = '\0';
 		tmp = ft_strjoin(e->str, e->str + e->index + 1);
 		free(e->str);
@@ -48,7 +48,7 @@ int			ft_process_back_delete(t_env *e)
 		e->max--;
 		tputs(e->str + e->index, 1, ft_putc);
 		tputs(" \0", 1, ft_putc);
-		tputs(tgetstr("rc", (char **)(&e->buf)), 1, ft_putc);
+		tputs(tgetstr("rc", NULL), 1, ft_putc);
 	}
 	return (0);
 }
@@ -60,7 +60,7 @@ static int	ft_ctrlk(t_env *e)
 	if (e->index < e->max)
 	{
 		ft_clear_input(e);
-		tputs(tgetstr("cd", (char **)(&e->buf)), 1, ft_putc);
+		tputs(tgetstr("cd", NULL), 1, ft_putc);
 		e->str[e->index] = '\0';
 		tmp = ft_strdup(e->str);
 		free(e->str);
@@ -75,7 +75,7 @@ static int	ft_ctrll(t_env *e)
 {
 	size_t	mem;
 
-	tputs(tgetstr("cl", (char **)(&e->buf)), 1, ft_putc);
+	tputs(tgetstr("cl", NULL), 1, ft_putc);
 	tputs(e->name, 1, ft_putc);
 	tputs(e->str, 1, ft_putc);
 	mem = e->index;

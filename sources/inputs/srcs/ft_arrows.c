@@ -56,14 +56,14 @@ static void	ft_leftright(t_env *e, char *inputs)
 		if (e->index > 0)
 			ft_goleft(e);
 		else
-			tputs(tgetstr("bl", (char **)(&e->buf)), 1, ft_putc);
+			tputs(tgetstr("bl", NULL), 1, ft_putc);
 	}
 	if (inputs[0] == 27 && inputs[1] == 91 && inputs[2] == 67)
 	{
 		if (e->max > e->index)
 			ft_goright(e);
 		else
-			tputs(tgetstr("bl", (char **)(&e->buf)), 1, ft_putc);
+			tputs(tgetstr("bl", NULL), 1, ft_putc);
 	}
 }
 

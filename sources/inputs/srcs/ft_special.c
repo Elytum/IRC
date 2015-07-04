@@ -15,7 +15,7 @@
 static void	ft_home(t_env *e)
 {
 	if (!e->index)
-		tputs(tgetstr("bl", (char **)(&e->buf)), 1, ft_putc);
+		tputs(tgetstr("bl", NULL), 1, ft_putc);
 	else
 	{
 		// dpintf(1, "Home detected : e->index - %zu\n", e->index);
@@ -27,7 +27,7 @@ static void	ft_home(t_env *e)
 static void	ft_end(t_env *e)
 {
 	if (e->index == e->max)
-		tputs(tgetstr("bl", (char **)(&e->buf)), 1, ft_putc);
+		tputs(tgetstr("bl", NULL), 1, ft_putc);
 	else
 		while (e->index != e->max)
 			ft_goright(e);

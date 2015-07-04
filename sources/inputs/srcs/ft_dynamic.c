@@ -83,10 +83,13 @@ void			ft_dynamic_clean(void)
 	if (e && e->str)
 	{
 		e->save = e->index;
-		// e->index += strlen(e->name);
+		e->index += strlen(e->name);
 		while (e->index > 0)
-			ft_goleft(e);
-		tputs(tgetstr("cd", (char **)(&e->buf)), 1, ft_putc);
+		{
+			--e->index;
+			tputs(tgetstr("le", NULL), 1, ft_putc);
+		}
+		tputs(tgetstr("cd", NULL), 1, ft_putc);
 	}
 }
 
@@ -101,6 +104,9 @@ void			ft_dynamic_restore(void)
 		tputs(e->str, 1, ft_putc);
 		e->index = e->max;
 		while (e->index > e->save)
-			ft_goleft(e);
+		{
+			--e->index;
+			tputs(tgetstr("le", NULL), 1, ft_putc);
+		}
 	}
 }
