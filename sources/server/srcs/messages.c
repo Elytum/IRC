@@ -5,6 +5,7 @@
 #include "server.h"
 #include "client.h"
 #include <common.h>
+#include <libft.h>
 
 /*
 **		Send a t_message to every client except the sending one.
@@ -40,7 +41,8 @@ void				send_neutral(t_message message, const t_client *clients,
 	i = 0;
 	while (i < actual)
 	{
-		if (sender.sock != clients[i].sock && S_ISCONNECT(clients[i]))
+		if (sender.sock != clients[i].sock && S_ISCONNECT(clients[i]) &&
+			ft_strmatch(sender.channel, clients[i].channel))
 			send_message(clients[i].sock, message);
 		++i;
 	}
@@ -60,7 +62,8 @@ void				send_allies(t_message message, const t_client *clients,
 	i = 0;
 	while (i < actual)
 	{
-		if (sender.sock != clients[i].sock && S_ISCONNECT(clients[i]))
+		if (sender.sock != clients[i].sock && S_ISCONNECT(clients[i]) &&
+			ft_strmatch(sender.channel, clients[i].channel))
 			send_message(clients[i].sock, message);
 		++i;
 	}
@@ -80,7 +83,8 @@ void				send_enemies(t_message message, const t_client *clients,
 	i = 0;
 	while (i < actual)
 	{
-		if (sender.sock != clients[i].sock && S_ISCONNECT(clients[i]))
+		if (sender.sock != clients[i].sock && S_ISCONNECT(clients[i]) &&
+			ft_strmatch(sender.channel, clients[i].channel))
 			send_message(clients[i].sock, message);
 		++i;
 	}

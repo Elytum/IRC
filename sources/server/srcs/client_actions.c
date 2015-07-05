@@ -22,11 +22,7 @@ t_message	get_who(t_client clients[MAX_CLIENTS], t_client *client, int actual)
 	who.len = 0;
 	i = 0;
 	while (i < actual)
-	{
-		printf("Ongoint len: %zu", who.len);
 		who.len += clients[i++].name_len + 1;
-	}
-	printf("Final len: %zu", who.len);
 	if (!(who.content = (char *)malloc(sizeof(char) * who.len)))
 		exit(1);
 	who.len = 0;
@@ -38,9 +34,7 @@ t_message	get_who(t_client clients[MAX_CLIENTS], t_client *client, int actual)
 		who.content[who.len++] = '\n';
 		++i;
 	}
-	printf("Received: [");
 	write(1, who.content, who.len);
-	printf("]\n");
 	return (who);
 	(void)client;
 }
@@ -76,28 +70,58 @@ void			command_join(t_client *client)
 	const char	intro[] = "You joined the channel \"";
 	const char	finish[] = "\"\n";
 
-	// free(client->channel);
 	ptr = client->message.content + sizeof("/join");
+	printf("Step 1: [%s]\n", ptr);
 	while (*ptr == ' ' || *ptr == '\t' || *ptr == '\n')
 		ptr++;
+	printf("Step 2: [%s]\n", ptr);
 	end = ptr;
 	while (*end && *end != ' ' && *end != '\t' && *end != '\n')
 		end++;
-	if (*end)
+	size = end - ptr;
+	printf("Step 3: [%s]\n", end);
+	while (*end == ' ' || *end == '\t' || *end == '\n')
+		end++;
+	printf("Step 4: [%s]\n", end);
+	if (!*ptr || *end)
+	{
+		printf("Error\n");
 		send_string(client->sock, error, sizeof(error));
+	}
 	else
 	{
-		size = end - ptr;
+		printf("Before:\n");
+		printf("[%s]\n", ptr);
+		printf("[%s]\n", client->message.content);
+		printf("[%s]\n", client->channel);
+
+		printf("Normal 0\n");
 		client->channel = strndup(ptr, size);
+		printf("Normal 1\n");
 		len = sizeof(error) + size + sizeof(intro);
+		printf("Normal 2\n");
 		if (!(ptr = (char *)malloc(sizeof(char) * sizeof(len))))
 			exit(1);
-		memcpy(ptr, intro, sizeof(intro));
-		memcpy(ptr + sizeof(intro), client->channel, size);
-		memcpy(ptr + sizeof(intro) + size, finish, sizeof(finish));
+		printf("Normal 3\n");
+		memcpy(ptr, intro, sizeof(intro) - 1);
+		printf("Normal 4\n");
+		memcpy(ptr + sizeof(intro) - 1, client->channel, size);
+		printf("Normal 5\n");
+		memcpy(ptr + sizeof(intro) - 1 + size, finish, sizeof(finish) - 1);
+		printf("Normal 6\n");
 		send_string(client->sock, ptr, len);
+		printf("Normal 7\n");
+
+
+		printf("After:\n");
+		printf("[%s]\n", ptr);
+		printf("[%s]\n", client->message.content);
+		printf("[%s]\n", client->channel);
+
 		free(ptr);
+		printf("Normal 8\n");
 	}
+	printf("Out\n");
 }
 
 void			interprate_message(t_client clients[MAX_CLIENTS], t_client *client, int *actual)

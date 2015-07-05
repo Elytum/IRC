@@ -63,13 +63,23 @@ static int			irc_loop(t_client clients[MAX_CLIENTS], const SOCKET sock)
 	return (actual);
 }
 
+void				init_clients(t_client clients[MAX_CLIENTS])
+{
+	int i;
+
+	memset((void *)clients, sizeof(t_client) * MAX_CLIENTS, 0);
+	i = 0;
+	while (i < MAX_CLIENTS)
+		clients[i++].channel = NULL;
+}
+
 int					main(int argc, char **argv)
 {
 	const SOCKET	sock = init_connection();
 	int				actual;
 	t_client		clients[MAX_CLIENTS];
 
-	memset((void *)clients, sizeof(t_client) * MAX_CLIENTS, 0);
+	init_clients(clients);
 	actual = irc_loop(clients, sock);
 	clear_clients(clients, actual);
 	closesocket(sock);

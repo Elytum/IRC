@@ -38,7 +38,7 @@ OBJS	=	$(SRCS:.c=.o)
 
 #--------------Actions----------------------#
 
-.PHONY: MLX $(NAME) clean fclean re
+.PHONY: $(NAME) clean fclean re
 
 all: $(NAME)
 

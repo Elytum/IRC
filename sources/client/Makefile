@@ -31,7 +31,7 @@ OBJS	=	$(SRCS:.c=.o)
 
 #--------------Actions----------------------#
 
-.PHONY: MLX $(NAME) clean fclean re
+.PHONY: $(NAME) clean fclean re
 
 all: $(NAME)
 
@@ -48,7 +48,7 @@ INPUTS:
 
 COMMON:
 	@echo "$(OK_COLOR)Building common$(NO_COLOR)"
-	@make -C ../libft
+	@make -C ../common
 
 %.o: %.c
 	$(CC) $(CCFLAGS) -c $(INC) $< -o $@
