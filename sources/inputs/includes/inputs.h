@@ -105,4 +105,5 @@ void		ft_special(t_env *e, int kind);
 void		pause_termcaps(void);
 char		*start_termcaps(void);
 
+void		ft_beep(void);
 #endif

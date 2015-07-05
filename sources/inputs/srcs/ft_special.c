@@ -40,3 +40,8 @@ void		ft_special(t_env *e, int kind)
 	else if (kind == 72)
 		ft_home(e);
 }
+
+void		ft_beep(void)
+{
+	tputs(tgetstr("bl", NULL), 1, ft_putc);
+}

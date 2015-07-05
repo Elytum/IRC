@@ -179,6 +179,7 @@ static int read_server(SOCKET sock, char **buffer)
          (*buffer)[total - 1] == '\n' || (*buffer)[total - 1] == '\0'))
          break ;
    }
+   beep();
    return total;
 }
 
