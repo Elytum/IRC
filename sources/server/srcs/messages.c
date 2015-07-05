@@ -18,11 +18,13 @@ static void print_message(t_message message)
 	write(1, "]\n", 2);
 }
 
-t_message			create_message(char *str, size_t len)
+t_message			create_message(const char *str, size_t len)
 {
 	t_message	message;
 
-	message.content = strdup(str);
+	if (!(message.content = (char *)malloc(sizeof(char) * len)))
+		exit(1);
+	memcpy(message.content, str, len);
 	message.len = len;
 	return (message);
 }

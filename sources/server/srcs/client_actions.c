@@ -60,7 +60,7 @@ void			command_who(t_client clients[MAX_CLIENTS], t_client *client, int actual)
 	return ;
 }
 
-void			command_join(t_client *client)
+void			command_join(t_client clients[MAX_CLIENTS], t_client *client, int actual)
 {
 	char	*ptr;
 	char	*end;
@@ -69,63 +69,50 @@ void			command_join(t_client *client)
 	const char	error[] = "Wrong format, should be \"/join channel\"\n";
 	const char	intro[] = "You joined the channel \"";
 	const char	finish[] = "\"\n";
+	const char	joined[] = " has joined the channel\n";
 
 	ptr = client->message.content + sizeof("/join");
-	printf("Step 1: [%s]\n", ptr);
 	while (*ptr == ' ' || *ptr == '\t' || *ptr == '\n')
 		ptr++;
-	printf("Step 2: [%s]\n", ptr);
 	end = ptr;
 	while (*end && *end != ' ' && *end != '\t' && *end != '\n')
 		end++;
 	size = end - ptr;
-	printf("Step 3: [%s]\n", end);
 	while (*end == ' ' || *end == '\t' || *end == '\n')
 		end++;
-	printf("Step 4: [%s]\n", end);
 	if (!*ptr || *end)
-	{
-		printf("Error\n");
 		send_string(client->sock, error, sizeof(error));
-	}
 	else
 	{
-		printf("Before:\n");
-		printf("[%s]\n", ptr);
-		printf("[%s]\n", client->message.content);
-		printf("[%s]\n", client->channel);
-
-		printf("Normal 0\n");
+		free(client->channel);
 		client->channel = strndup(ptr, size);
-		printf("Normal 1\n");
 		len = sizeof(error) + size + sizeof(intro);
-		printf("Normal 2\n");
-		if (!(ptr = (char *)malloc(sizeof(char) * sizeof(len))))
+		if (!(ptr = (char *)malloc(sizeof(char) * len)))
 			exit(1);
-		printf("Normal 3\n");
 		memcpy(ptr, intro, sizeof(intro) - 1);
-		printf("Normal 4\n");
 		memcpy(ptr + sizeof(intro) - 1, client->channel, size);
-		printf("Normal 5\n");
 		memcpy(ptr + sizeof(intro) - 1 + size, finish, sizeof(finish) - 1);
-		printf("Normal 6\n");
 		send_string(client->sock, ptr, len);
-		printf("Normal 7\n");
-
-
-		printf("After:\n");
-		printf("[%s]\n", ptr);
-		printf("[%s]\n", client->message.content);
-		printf("[%s]\n", client->channel);
 
 		free(ptr);
-		printf("Normal 8\n");
+
+		size_t len;
+
+		len = client->name_len + sizeof(joined) - 1;
+		if (!(ptr = (char *)malloc(sizeof(char) * len)))
+			exit (1);
+		memcpy(ptr, client->name, client->name_len);
+		memcpy(ptr + client->name_len, joined, sizeof(joined) - 1);
+		message_replace(client, create_message(ptr, len));
+		free(ptr);
+		send_message_to_all_clients(clients, *client, actual);
 	}
-	printf("Out\n");
 }
 
 void			interprate_message(t_client clients[MAX_CLIENTS], t_client *client, int *actual)
 {
+	char	unknown[] = "Unknown command\n";
+
 	if (S_ISTALK((*client)) && client->message.len > 1 &&
 		!(client->message.len == 1 && client->message.content[0] == '\n'))
 	{
@@ -138,13 +125,13 @@ void			interprate_message(t_client clients[MAX_CLIENTS], t_client *client, int *
 			else if (command_match(client->message.content + 1, "nick"))
 				write(1, "nick", sizeof("nick"));
 			else if (command_match(client->message.content + 1, "join"))
-				command_join(client);//write(1, "join", sizeof("join"));
+				command_join(clients, client, *actual);//write(1, "join", sizeof("join"));
 			else if (command_match(client->message.content + 1, "who"))
 				command_who(clients, client, *actual);
 			else if (command_match(client->message.content + 1, "msg"))
 				write(1, "msg", sizeof("msg"));
 			else
-				write(1, "Command", sizeof("Command"));
+				send_string(client->sock, unknown, sizeof(unknown) - 1);
 		}
 		else
 			send_message_to_all_clients(clients, *client, (*actual));
