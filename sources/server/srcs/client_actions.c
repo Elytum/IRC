@@ -66,10 +66,10 @@ void			command_join(t_client clients[MAX_CLIENTS], t_client *client, int actual)
 	char	*end;
 	size_t	size;
 	size_t	len;
-	const char	error[] = "Wrong format, should be \"/join channel\"\n";
+	const char	error[] = "Wrong format, should be \"/join channel\".\n";
 	const char	intro[] = "You joined the channel \"";
-	const char	finish[] = "\"\n";
-	const char	joined[] = " has joined the channel\n";
+	const char	finish[] = "\".\n";
+	const char	joined[] = " has joined the channel.\n";
 
 	ptr = client->message.content + sizeof("/join");
 	while (*ptr == ' ' || *ptr == '\t' || *ptr == '\n')
@@ -109,9 +109,40 @@ void			command_join(t_client clients[MAX_CLIENTS], t_client *client, int actual)
 	}
 }
 
+void			command_msg(t_client clients[MAX_CLIENTS], t_client *client, int actual)
+{
+	char	*target;
+	char	*msg;
+
+	const char	error[] = "Wrong format, should be \"/msg target\".\n";
+
+	target = client->message.content + sizeof("/msg");
+	while (*target == ' ' || *target == '\t' || *target == '\n')
+		target++;
+	msg = target;
+	while (*msg && *msg != ' ' && *msg != '\t' && *msg != '\n')
+		msg++;
+	while (*msg == ' ' || *msg == '\t' || *msg == '\n')
+		msg++;
+	if (!*target || !*msg)
+		send_string(client->sock, error, sizeof(error));
+	else
+	{
+		char *tmp;
+
+		tmp = clients->message.content;
+		msg[-1] = '\0';
+		clients->message.content = msg;
+		send_message_to_client(clients, *client, actual, target);
+		free(tmp);
+		client->message.content = NULL;
+		client->message.len = 0;
+	}
+}
+
 void			interprate_message(t_client clients[MAX_CLIENTS], t_client *client, int *actual)
 {
-	char	unknown[] = "Unknown command\n";
+	char	unknown[] = "Unknown command.\n";
 
 	if (S_ISTALK((*client)) && client->message.len > 1 &&
 		!(client->message.len == 1 && client->message.content[0] == '\n'))
@@ -125,11 +156,11 @@ void			interprate_message(t_client clients[MAX_CLIENTS], t_client *client, int *
 			else if (command_match(client->message.content + 1, "nick"))
 				write(1, "nick", sizeof("nick"));
 			else if (command_match(client->message.content + 1, "join"))
-				command_join(clients, client, *actual);//write(1, "join", sizeof("join"));
+				command_join(clients, client, *actual);
 			else if (command_match(client->message.content + 1, "who"))
 				command_who(clients, client, *actual);
 			else if (command_match(client->message.content + 1, "msg"))
-				write(1, "msg", sizeof("msg"));
+				command_msg(clients, client, *actual);//write(1, "msg", sizeof("msg"));
 			else
 				send_string(client->sock, unknown, sizeof(unknown) - 1);
 		}

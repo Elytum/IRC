@@ -35,7 +35,7 @@ void				message_replace(t_client *client, t_message message)
 	client->message = message;
 }
 
-void				send_neutral(t_message message, const t_client *clients,
+void				send_neutrals(t_message message, const t_client *clients,
 			const t_client sender, const int actual)
 {
 	int				i;
@@ -92,6 +92,61 @@ void				send_enemies(t_message message, const t_client *clients,
 	}
 }
 
+
+void				send_neutral(t_message message, const t_client *clients,
+			const int actual, const char *target)
+{
+	int				i;
+
+	i = 0;
+	while (i < actual)
+	{
+		if (S_ISCONNECT(clients[i]) && !ft_strcmp(target, clients[i].name))
+			send_message(clients[i].sock, message);
+		++i;
+	}
+}
+
+void				send_ally(t_message message, const t_client *clients,
+			const int actual, const char *target)
+{
+	int				i;
+
+	if (ANSI_COLOR_BLUE_LEN == ANSI_COLOR_GREEN_LEN)
+	{
+		memcpy(message.content,
+		ANSI_COLOR_GREEN,
+		ANSI_COLOR_GREEN_LEN);
+	}
+	i = 0;
+	while (i < actual)
+	{
+		if (S_ISCONNECT(clients[i]) && !ft_strcmp(target, clients[i].name))
+			send_message(clients[i].sock, message);
+		++i;
+	}
+}
+
+void				send_enemy(t_message message, const t_client *clients,
+			const int actual, const char *target)
+{
+	int				i;
+
+	if (ANSI_COLOR_BLUE_LEN == ANSI_COLOR_RED_LEN)
+	{
+		memcpy(message.content,
+		ANSI_COLOR_RED,
+		ANSI_COLOR_RED_LEN);
+	}
+	i = 0;
+	while (i < actual)
+	{
+		if (S_ISCONNECT(clients[i]) && !ft_strcmp(target, clients[i].name))
+			send_message(clients[i].sock, message);
+		++i;
+	}
+}
+
 t_message			prepare_neutral_message(const t_client sender)
 {
 	t_message		message;
@@ -127,10 +182,23 @@ void				send_message_to_all_clients(const t_client *clients,
 	t_message		message;
 
 	message = prepare_neutral_message(sender);
-	send_neutral(message, clients, sender, actual);
+	send_neutrals(message, clients, sender, actual);
 	print_message(message);
 	send_allies(message, clients, sender, actual);
 	send_enemies(message, clients, sender, actual);
+	free(message.content);
+}
+
+void				send_message_to_client(const t_client *clients,
+	const t_client sender, const int actual, const char *target)
+{
+	t_message		message;
+
+	message = prepare_neutral_message(sender);
+	send_neutral(message, clients, actual, target);
+	print_message(message);
+	send_ally(message, clients, actual, target);
+	send_enemy(message, clients, actual, target);
 	free(message.content);
 }
 

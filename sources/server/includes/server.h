@@ -51,6 +51,7 @@ typedef struct in_addr IN_ADDR;
 void			send_message(SOCKET sock, const t_message message);
 void			send_string(SOCKET sock, const char *message, const size_t len);
 void			send_message_to_all_clients(const t_client *clients, const t_client sender, const int actual);
+void				send_message_to_client(const t_client *clients, const t_client sender, const int actual, const char *target);
 void			clear_message(t_message *message);
 void			add_message(t_message *message, char buffer[BUF_SIZE], int c);
 t_message		create_message(const char *str, size_t len);
