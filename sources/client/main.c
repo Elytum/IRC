@@ -57,7 +57,10 @@ static void app(SOCKET sock)
             break;
          }
          else if (n != -1)
+         {
             write(1, buffer, n);
+            free(buffer);
+         }
          ft_dynamic_restore();
       }
    }
@@ -226,28 +229,33 @@ int main(int argc, char **argv)
                ptr = buffer + 9;
                while (*ptr == ' ' | *ptr == '\t')
                   ptr++;
-               machine = ptr;
-               while (*ptr && *ptr != ' ' && *ptr != '\t')
-                  ptr++;
-               len = ptr - machine;
-               while (*ptr == ' ' || *ptr == '\t')
-                  ptr++;
-               if (*ptr >= '0' && *ptr <= '9')
+               if (!*ptr)
+                  printf("Wrong format, should be \"/connect <address> <port>\".\n");
+               else
                {
-                  port = atoi(ptr);
-                  while (*ptr >= '0' && *ptr <= '9')
+                  machine = ptr;
+                  while (*ptr && *ptr != ' ' && *ptr != '\t')
                      ptr++;
-                  if (!*ptr)
+                  len = ptr - machine;
+                  while (*ptr == ' ' || *ptr == '\t')
+                     ptr++;
+                  if (*ptr >= '0' && *ptr <= '9')
                   {
-                     machine = strndup(machine, len);
-                     sock = init_connection_safe(machine, port);
-                     if (sock != INVALID_SOCKET)
+                     port = atoi(ptr);
+                     while (*ptr >= '0' && *ptr <= '9')
+                        ptr++;
+                     if (!*ptr)
                      {
-                        app(sock);
-                        break ;
+                        machine = strndup(machine, len);
+                        sock = init_connection_safe(machine, port);
+                        if (sock != INVALID_SOCKET)
+                        {
+                           app(sock);
+                           break ;
+                        }
                      }
                   }
-                  else if (*ptr != '\0')
+                  else if (*ptr == '\0')
                      printf("Wrong format, should be \"/connect <address> <port>\".\n");
                   else
                      printf("Wrong format, port must be a number.\n");
