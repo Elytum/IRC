@@ -35,10 +35,8 @@ static void app(SOCKET sock)
 
       if (select(sock + 1, &rdfs, NULL, NULL, NULL) == -1)
       {
-         // perror("select()");
-         // exit(errno);
-         ft_dynamic_clean();
-         printf("%sGood bye ! Hope to see you soon on our IRC !%s\n", ANSI_COLOR_RED, ANSI_COLOR_RESET);
+         perror("select()");
+         exit(errno);
       }
 
       if (FD_ISSET(STDIN_FILENO, &rdfs))
@@ -205,14 +203,16 @@ static void write_server(SOCKET sock, char *buffer)
    }
 }
 
-// void  good_bye(int id)
-// {
-//    if (id == SIGINT)
-//    {
-//       ft_dynamic_clean();
-//       printf("%sGood bye ! Hope to see you soon on our IRC !%s\n", ANSI_COLOR_RED, ANSI_COLOR_RESET);
-//    }
-// }
+void  good_bye(int id)
+{
+   if (id == SIGINT)
+   {
+      ft_dynamic_clean();
+      write(1, ANSI_COLOR_RED QUIT_MESSAGE ANSI_COLOR_RESET, ANSI_COLOR_RED_LEN + QUIT_MESSAGE_LEN + ANSI_COLOR_RESET_LEN - 2);
+   }
+   signal(SIGINT, SIG_DFL);
+   raise(SIGINT);
+}
 
 int main(int argc, char **argv)
 {
@@ -221,7 +221,7 @@ int main(int argc, char **argv)
    char  *buffer;
    SOCKET sock;
 
-   signal(SIGINT, SIG_IGN);
+   signal(SIGINT, good_bye);
    if (argc == 1)
    {
       printf("Please connect to a server:\n");
@@ -287,9 +287,7 @@ int main(int argc, char **argv)
    }
    else if (argc == 3)
    {
-      printf("Before\n");
       int test = init_connection(argv[1], atoi(argv[2]));
-      printf("After\n");
       app(test);
    }
    else
