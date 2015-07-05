@@ -17,17 +17,70 @@ static void print_message(t_message message)
 	write(1, "]\n", 2);
 }
 
-void				send_message_to_all_clients(const t_client *clients,
+void				send_neutral(t_message message, const t_client *clients,
 			const t_client sender, const int actual)
 {
 	int				i;
+
+	i = 0;
+	while (i < actual)
+	{
+		if (sender.sock != clients[i].sock && S_ISCONNECT(clients[i]))
+			send_message(clients[i].sock, message);
+		++i;
+	}
+}
+
+void				send_allies(t_message message, const t_client *clients,
+			const t_client sender, const int actual)
+{
+	int				i;
+
+	if (ANSI_COLOR_BLUE_LEN == ANSI_COLOR_GREEN_LEN)
+	{
+		memcpy(message.content,
+		ANSI_COLOR_GREEN,
+		ANSI_COLOR_GREEN_LEN);
+	}
+	i = 0;
+	while (i < actual)
+	{
+		if (sender.sock != clients[i].sock && S_ISCONNECT(clients[i]))
+			send_message(clients[i].sock, message);
+		++i;
+	}
+}
+
+void				send_enemies(t_message message, const t_client *clients,
+			const t_client sender, const int actual)
+{
+	int				i;
+
+	if (ANSI_COLOR_BLUE_LEN == ANSI_COLOR_RED_LEN)
+	{
+		memcpy(message.content,
+		ANSI_COLOR_RED,
+		ANSI_COLOR_RED_LEN);
+	}
+	i = 0;
+	while (i < actual)
+	{
+		if (sender.sock != clients[i].sock && S_ISCONNECT(clients[i]))
+			send_message(clients[i].sock, message);
+		++i;
+	}
+}
+
+t_message			prepare_neutral_message(const t_client sender)
+{
 	t_message		message;
 	const char		separatator[] = " : ";
 	const size_t	separatator_len = sizeof(separatator) - 1;
 
-	message.len = ANSI_COLOR_BLUE_LEN + sender.name_len + separatator_len + ANSI_COLOR_RESET_LEN + sender.message.len;
+	message.len = ANSI_COLOR_BLUE_LEN + sender.name_len +
+	separatator_len + ANSI_COLOR_RESET_LEN + sender.message.len;
 	if (!(message.content = (char *)malloc(sizeof(char) * message.len)))
-		return ;
+		exit(1);
 	memcpy(message.content,
 			ANSI_COLOR_BLUE,
 			ANSI_COLOR_BLUE_LEN);
@@ -40,17 +93,23 @@ void				send_message_to_all_clients(const t_client *clients,
 	memcpy(message.content + ANSI_COLOR_BLUE_LEN + sender.name_len + SEPARATOR_LEN,
 			ANSI_COLOR_RESET,
 			ANSI_COLOR_RESET_LEN);
-	memcpy(message.content + ANSI_COLOR_BLUE_LEN + sender.name_len + SEPARATOR_LEN + ANSI_COLOR_RESET_LEN,
+	memcpy(message.content + ANSI_COLOR_BLUE_LEN + sender.name_len +
+		SEPARATOR_LEN + ANSI_COLOR_RESET_LEN,
 			sender.message.content,
 			sender.message.len);
-print_message(message);
-	i = 0;
-	while (i < actual)
-	{
-		if (sender.sock != clients[i].sock && S_ISCONNECT(clients[i]))
-			send_message(clients[i].sock, message);
-		++i;
-	}
+	return (message);
+}
+
+void				send_message_to_all_clients(const t_client *clients,
+			const t_client sender, const int actual)
+{
+	t_message		message;
+
+	message = prepare_neutral_message(sender);
+	send_neutral(message, clients, sender, actual);
+	print_message(message);
+	send_allies(message, clients, sender, actual);
+	send_enemies(message, clients, sender, actual);
 	free(message.content);
 }
 
