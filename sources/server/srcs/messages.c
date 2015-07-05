@@ -4,6 +4,7 @@
 #include <string.h>
 #include "server.h"
 #include "client.h"
+#include <common.h>
 
 /*
 **		Send a t_message to every client except to the sending one.
@@ -24,12 +25,24 @@ void				send_message_to_all_clients(const t_client *clients,
 	const char		separatator[] = " : ";
 	const size_t	separatator_len = sizeof(separatator) - 1;
 
-	message.len = sender.name_len + SEPARATOR_LEN + sender.message.len;
+	message.len = ANSI_COLOR_BLUE_LEN + sender.name_len + separatator_len + ANSI_COLOR_RESET_LEN + sender.message.len;
 	if (!(message.content = (char *)malloc(sizeof(char) * message.len)))
 		return ;
-	memcpy(message.content, sender.name, sender.name_len);
-	memcpy(message.content + sender.name_len, SEPARATOR, separatator_len);
-	memcpy(message.content + sender.name_len + SEPARATOR_LEN, sender.message.content, sender.message.len);
+	memcpy(message.content,
+			ANSI_COLOR_BLUE,
+			ANSI_COLOR_BLUE_LEN);
+	memcpy(message.content + ANSI_COLOR_BLUE_LEN,
+			sender.name,
+			sender.name_len);
+	memcpy(message.content + ANSI_COLOR_BLUE_LEN + sender.name_len,
+			SEPARATOR,
+			separatator_len);
+	memcpy(message.content + ANSI_COLOR_BLUE_LEN + sender.name_len + SEPARATOR_LEN,
+			ANSI_COLOR_RESET,
+			ANSI_COLOR_RESET_LEN);
+	memcpy(message.content + ANSI_COLOR_BLUE_LEN + sender.name_len + SEPARATOR_LEN + ANSI_COLOR_RESET_LEN,
+			sender.message.content,
+			sender.message.len);
 print_message(message);
 	i = 0;
 	while (i < actual)
