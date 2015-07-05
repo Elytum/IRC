@@ -10,33 +10,28 @@
 #                                                                              #
 # **************************************************************************** #
 
+NO_COLOR=\x1b[0m
+OK_COLOR=\x1b[32;01m
+ERROR_COLOR=\x1b[31;01m
+WARN_COLOR=\x1b[33;01m
+
 # -------------Compilateur------------------#
 CC		=	gcc
 #--------------Name-------------------------#
-NAME	=	fdf
+NAME	=	server
 MYPATH	=	$(HOME)
 #--------------Sources----------------------#
 FILES	=	main.c								\
-			parsing/get_next_line.c				\
-			parsing/get_map.c					\
-			maths/matrices.c					\
-			maths/matrices_moves.c				\
-			maths/matrices_utils.c				\
-			maths/vectors.c						\
-			render/draw_map.c					\
-			render/draw_line.c					\
-			lib/init.c							\
-			lib/hooks.c							\
-			lib/extra_hooks.c					\
-			lib/moves.c							\
-			lib/libft.c							\
-			lib/libft2.c						\
-			lib/libft3.c						\
-			lib/mlx_tools.c
+			client_actions.c					\
+			connection.c						\
+			message_adding.c					\
+			messages.c							\
+			pool.c								\
+			pseudo.c							\
+			read.c
 
-INC		=	-I minilibx_macos -I./libft/ -I./includes
+INC		=	-I./includes/ -I../common/ -I../inputs/includes/ -I../libft/
 CCFLAGS	=	-Wall -Wextra -Werror -g
-LDFLAGS	=	-framework glut -framework Cocoa -framework OpenGL
 
 SRCS	=	$(addprefix srcs/, $(FILES))
 OBJS	=	$(SRCS:.c=.o)
@@ -47,22 +42,29 @@ OBJS	=	$(SRCS:.c=.o)
 
 all: $(NAME)
 
-MLX:
-	make -C minilibx_macos
+$(NAME): LIBFT INPUTS $(OBJS)
+	$(CC) $(CCFLAGS) $(INC) $(OBJS) -o $(NAME) ../libft/libft.a ../inputs/get_lines.a -lncurses
 
-$(NAME): MLX $(OBJS)
-	$(CC) $(CCFLAGS) $(LDFLAGS) $(INC) $(OBJS) -o $(NAME) minilibx_macos/libmlx.a -O3
+LIBFT:
+	@echo "$(OK_COLOR)Building libft$(NO_COLOR)"
+	@make -C ../libft
+
+INPUTS:
+	@echo "$(OK_COLOR)Building inputs$(NO_COLOR)"
+	@make -C ../inputs
 
 %.o: %.c
-	$(CC) $(CCFLAGS) -c  $(INC) $< -o $@
+	$(CC) $(CCFLAGS) -c $(INC) $< -o $@
 	
 clean:
-	make clean -C minilibx_macos
+	make clean -C ../libft
+	make clean -C ../inputs
 	rm -f $(OBJS)
 	
-fclean:	clean
-	make clean -C minilibx_macos
+fclean:
+	make fclean -C ../libft
+	make fclean -C ../inputs
+	rm -f $(OBJS)
 	rm -f $(NAME)
 
 re: fclean all
-	make re -C minilibx_macos

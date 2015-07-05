@@ -44,7 +44,7 @@ typedef struct in_addr IN_ADDR;
 
 #include "client.h"
 
-static int		init_connection(void);
+// static int		init_connection(void);
 
 //Messages_handling
 
@@ -65,7 +65,7 @@ int				read_client(SOCKET sock, char *buffer, const size_t len);
 
 //t_client handling
 
-int				client_status_update(const SOCKET sock, char buffer[BUF_SIZE], t_client *client);
+int				client_status_update(const SOCKET sock, t_client *client);
 void			disconnection(int *actual, t_client clients[MAX_CLIENTS], size_t i);
 void			remove_client(t_client *clients, int to_remove, int *actual);
 void			clear_clients(t_client *clients, int actual);

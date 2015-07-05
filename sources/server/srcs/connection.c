@@ -24,12 +24,12 @@ void				connection_request(t_client *client)
 **		Determine if the client is connecting or disconnecting and in case of connection, add it.
 */
 
-int					client_status_update(const SOCKET sock, char buffer[BUF_SIZE], t_client *client)
+int					client_status_update(const SOCKET sock, t_client *client)
 {
-	SOCKADDR_IN		csin = { 0 };
+	SOCKADDR_IN		csin;
+	bzero(&csin, sizeof(SOCKADDR_IN));
 	socklen_t		sinsize = sizeof (csin);
 	int				csock = accept(sock, (SOCKADDR *)&csin, &sinsize);
-	size_t			len;
 
 	if (csock == SOCKET_ERROR)
 	{

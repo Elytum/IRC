@@ -10,30 +10,39 @@
 #                                                                              #
 # **************************************************************************** #
 
-# -------------Compilateur------------------#
+NO_COLOR=\x1b[0m
+OK_COLOR=\x1b[32;01m
+ERROR_COLOR=\x1b[31;01m
+WARN_COLOR=\x1b[33;01m
 
-#--------------Name-------------------------#
+.PHONY: $(NAME) build clean fclean re
 
-#--------------Sources----------------------#
+all: build cpy
 
-#--------------Actions----------------------#
+build:
+	@echo "$(OK_COLOR)Building client$(NO_COLOR)"
+	make -C sources/client
+	@echo "$(OK_COLOR)Building server$(NO_COLOR)"
+	make -C sources/server
+	@echo "$(OK_COLOR)Building done$(NO_COLOR)"
 
-.PHONY: $(NAME) clean fclean re
-
-all: $(NAME)
-
-$(NAME):
-	make client
-	make server
+cpy:
+	@echo "$(OK_COLOR)Copying binaries$(NO_COLOR)"
+	@cp sources/client/client .
+	@cp sources/server/server .
 
 clean:
-	make clean -C client
-	make clean -C server
+	@echo "$(OK_COLOR)Clearing client$(NO_COLOR)"
+	make clean -C sources/client
+	@echo "$(OK_COLOR)Clearing server$(NO_COLOR)"
+	make clean -C sources/server
+	@echo "$(OK_COLOR)Clearing done$(NO_COLOR)"
 	
-fclean:	
-	make fclean -C client
-	make fclean -C server
+fclean:
+	@echo "$(OK_COLOR)Force clean client$(NO_COLOR)"
+	make fclean -C sources/client
+	@echo "$(OK_COLOR)Force clean server$(NO_COLOR)"
+	make fclean -C sources/server
+	@echo "$(OK_COLOR)Force clean done$(NO_COLOR)"
 
-re:
-	make re -C client
-	make re -C server
+re: fclean build

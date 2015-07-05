@@ -9,7 +9,8 @@
 static int			init_connection(void)
 {
 	SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
-	SOCKADDR_IN sin = { 0 };
+	SOCKADDR_IN sin;
+	bzero(&sin, sizeof(SOCKADDR_IN));
 
 	if (sock == INVALID_SOCKET)
 	{
@@ -52,7 +53,7 @@ static int			irc_loop(t_client clients[MAX_CLIENTS], const SOCKET sock)
 			break;
 		else if (!FD_ISSET(sock, &rdfs))
 			client_talk(&actual, clients, &rdfs, buffer);
-		else if ((csock = client_status_update(sock, buffer, &(clients[actual]))))
+		else if ((csock = client_status_update(sock, &(clients[actual]))))
 		{
 			max = csock > max ? csock : max;
 			FD_SET(csock, &rdfs);
@@ -73,4 +74,6 @@ int					main(int argc, char **argv)
 	clear_clients(clients, actual);
 	closesocket(sock);
 	return (EXIT_SUCCESS);
+	(void)argc;
+	(void)argv;
 }

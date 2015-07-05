@@ -14,7 +14,7 @@
 
 void		prepare_pool(fd_set *rdfs, t_client clients[MAX_CLIENTS], const SOCKET sock, const int actual)
 {
-	size_t	i;
+	int	i;
 
 	FD_ZERO(rdfs);
 	FD_SET(STDIN_FILENO, rdfs);
