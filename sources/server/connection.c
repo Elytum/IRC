@@ -5,6 +5,7 @@
 
 #include "server.h"
 #include "client.h"
+#include <common.h>
 
 void				connection_request(t_client *client)
 {

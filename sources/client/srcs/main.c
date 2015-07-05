@@ -5,6 +5,7 @@
 
 #include "client.h"
 #include <inputs.h>
+#include <common.h>
 
 static int  command_match(const char *str, const char *command)
 {
@@ -32,10 +33,12 @@ static void app(SOCKET sock)
       /* add the socket */
       FD_SET(sock, &rdfs);
 
-      if(select(sock + 1, &rdfs, NULL, NULL, NULL) == -1)
+      if (select(sock + 1, &rdfs, NULL, NULL, NULL) == -1)
       {
-         perror("select()");
-         exit(errno);
+         // perror("select()");
+         // exit(errno);
+         ft_dynamic_clean();
+         printf("%sGood bye ! Hope to see you soon on our IRC !%s\n", ANSI_COLOR_RED, ANSI_COLOR_RESET);
       }
 
       if (FD_ISSET(STDIN_FILENO, &rdfs))
@@ -71,7 +74,8 @@ static void app(SOCKET sock)
 static int init_connection(const char *address, const size_t port)
 {
    SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
-   SOCKADDR_IN sin = { 0 };
+   SOCKADDR_IN sin;
+   bzero(&sin, sizeof(SOCKADDR_IN));
    struct hostent *hostinfo;
 
    if(sock == INVALID_SOCKET)
@@ -103,7 +107,8 @@ static int init_connection(const char *address, const size_t port)
 static int init_connection_safe(const char *address, const size_t port)
 {
    SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
-   SOCKADDR_IN sin = { 0 };
+   static SOCKADDR_IN sin;
+   bzero(&sin, sizeof(SOCKADDR_IN));
    struct hostent *hostinfo;
 
    if (sock == INVALID_SOCKET)
@@ -200,6 +205,15 @@ static void write_server(SOCKET sock, char *buffer)
    }
 }
 
+// void  good_bye(int id)
+// {
+//    if (id == SIGINT)
+//    {
+//       ft_dynamic_clean();
+//       printf("%sGood bye ! Hope to see you soon on our IRC !%s\n", ANSI_COLOR_RED, ANSI_COLOR_RESET);
+//    }
+// }
+
 int main(int argc, char **argv)
 {
    char  *machine;
@@ -207,6 +221,7 @@ int main(int argc, char **argv)
    char  *buffer;
    SOCKET sock;
 
+   signal(SIGINT, SIG_IGN);
    if (argc == 1)
    {
       printf("Please connect to a server:\n");
@@ -271,7 +286,12 @@ int main(int argc, char **argv)
       free(buffer);
    }
    else if (argc == 3)
-      app(init_connection(argv[1], atoi(argv[2])));
+   {
+      printf("Before\n");
+      int test = init_connection(argv[1], atoi(argv[2]));
+      printf("After\n");
+      app(test);
+   }
    else
    {
       if (argc > 3)

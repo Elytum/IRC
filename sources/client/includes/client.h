@@ -37,3 +37,14 @@ static int 		read_server(SOCKET sock, char **buffer);
 static void		write_server(SOCKET sock, char *buffer);
 
 #endif /* guard */
+
+
+/*
+Elytum ENGINE
+Juan SOUND
+Leo GRAPHIC
+Drew STORY
+Christo NULL
+Jenn IA
+Paul GAMEPLAY
+*/

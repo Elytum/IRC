@@ -10,51 +10,55 @@
 #                                                                              #
 # **************************************************************************** #
 
+NO_COLOR=\x1b[0m
+OK_COLOR=\x1b[32;01m
+ERROR_COLOR=\x1b[31;01m
+WARN_COLOR=\x1b[33;01m
+
 # -------------Compilateur------------------#
 CC		=	gcc
 #--------------Name-------------------------#
-NAME = get_lines
+NAME	=	client
+MYPATH	=	$(HOME)
 #--------------Sources----------------------#
-SOURCES =	ft_arrows.c				\
-			ft_arrows2.c			\
-			ft_dynamic.c			\
-			ft_charmanage.c			\
-			ft_clean.c				\
-			ft_cursor.c				\
-			ft_delete.c				\
-			ft_inputs.c				\
-			ft_lstrmanage.c			\
-			ft_managechar.c			\
-			ft_moves.c				\
-			ft_put.c				\
-			ft_special.c			\
-			ft_termcaps.c
+FILES	=	main.c								\
 
-SRC = $(addprefix srcs/, $(SOURCES))
+INC		=	-I./includes/ -I../common/ -I../inputs/includes/ -I../libft/
+CCFLAGS	=	-Wall -Wextra -Werror -g
 
-OBJ = $(SRC:.c=.o)
+SRCS	=	$(addprefix srcs/, $(FILES))
+OBJS	=	$(SRCS:.c=.o)
 
-LIBNAME = get_lines.a
+#--------------Actions----------------------#
 
-FLAGS = -Wall -Werror -Wextra
-
-INC = -I./includes -I../libft
-
-#--------------Sources----------------------#
+.PHONY: MLX $(NAME) clean fclean re
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	@ar rc $(LIBNAME) $(OBJ)
-	@ranlib $(LIBNAME)
+$(NAME): LIBFT INPUTS $(OBJS)
+	$(CC) $(CCFLAGS) $(INC) $(OBJS) -o $(NAME) ../libft/libft.a ../inputs/get_lines.a -lncurses
+
+LIBFT:
+	@echo "$(OK_COLOR)Building libft$(NO_COLOR)"
+	@make -C ../libft
+
+INPUTS:
+	@echo "$(OK_COLOR)Building inputs$(NO_COLOR)"
+	@make -C ../inputs
 
 %.o: %.c
-	$(CC) $(CCFLAGS) -c  $(INC) $< -o $@
-
+	$(CC) $(CCFLAGS) -c $(INC) $< -o $@
+	
 clean:
-	@rm -f $(OBJ)
-
-fclean: clean
-	@rm -f $(LIBNAME)
+	make clean -C ../libft
+	make clean -C ../inputs
+	rm -f $(OBJS)
+	
+fclean:
+	make fclean -C ../libft
+	make fclean -C ../inputs
+	rm -f $(OBJS)
+	rm -f $(NAME)
 
 re: fclean all
+	make
