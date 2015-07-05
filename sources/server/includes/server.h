@@ -53,7 +53,8 @@ void			send_string(SOCKET sock, const char *message, const size_t len);
 void			send_message_to_all_clients(const t_client *clients, const t_client sender, const int actual);
 void			clear_message(t_message *message);
 void			add_message(t_message *message, char buffer[BUF_SIZE], int c);
-
+t_message		create_message(char *str, size_t len);
+void			message_replace(t_client *client, t_message message);
 //Pool handling
 
 void			prepare_pool(fd_set *rdfs, t_client clients[MAX_CLIENTS], const SOCKET sock, const int actual);

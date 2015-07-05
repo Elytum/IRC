@@ -30,4 +30,6 @@
 #define ANSI_COLOR_CYAN_LEN    (sizeof(ANSI_COLOR_CYAN))
 #define ANSI_COLOR_RESET_LEN   (sizeof(ANSI_COLOR_RESET))
 
+int  command_match(const char *str, const char *command);
+
 #endif

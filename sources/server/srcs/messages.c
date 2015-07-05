@@ -7,7 +7,7 @@
 #include <common.h>
 
 /*
-**		Send a t_message to every client except to the sending one.
+**		Send a t_message to every client except the sending one.
 */
 
 static void print_message(t_message message)
@@ -15,6 +15,21 @@ static void print_message(t_message message)
 	write(1, "Message = [", 11);
 	write(1, message.content, message.len);
 	write(1, "]\n", 2);
+}
+
+t_message			create_message(char *str, size_t len)
+{
+	t_message	message;
+
+	message.content = strdup(str);
+	message.len = len;
+	return (message);
+}
+
+void				message_replace(t_client *client, t_message message)
+{
+	free(client->message.content);
+	client->message = message;
 }
 
 void				send_neutral(t_message message, const t_client *clients,

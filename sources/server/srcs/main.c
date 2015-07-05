@@ -32,7 +32,7 @@ static int			init_connection(void)
 		perror("listen()");
 		exit(errno);
 	}
-	return sock;
+	return (sock);
 }
 
 static int			irc_loop(t_client clients[MAX_CLIENTS], const SOCKET sock)

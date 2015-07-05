@@ -34,6 +34,7 @@ typedef struct		s_client
 	size_t			name_len;
 	size_t			status;
 	t_message		message;
+	char			*channel;
 }					t_client;
 
 #endif /* guard */

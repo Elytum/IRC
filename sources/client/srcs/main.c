@@ -7,15 +7,15 @@
 #include <inputs.h>
 #include <common.h>
 
-static int  command_match(const char *str, const char *command)
-{
-   while (*command && *command == *str)
-   {
-      command++;
-      str++;
-   }
-   return (!*command && (*str == ' ' || *str == '\t' || *str == '\n' || *str == '\0'));
-}
+// int  command_match(const char *str, const char *command)
+// {
+//    while (*command && *command == *str)
+//    {
+//       command++;
+//       str++;
+//    }
+//    return (!*command && (*str == ' ' || *str == '\t' || *str == '\n' || *str == '\0'));
+// }
 
 static void app(SOCKET sock)
 {
