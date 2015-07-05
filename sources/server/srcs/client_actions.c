@@ -130,13 +130,15 @@ void			command_msg(t_client clients[MAX_CLIENTS], t_client *client, int actual)
 	{
 		char *tmp;
 
-		tmp = clients->message.content;
+		tmp = client->message.content;
 		msg[-1] = '\0';
-		clients->message.content = msg;
+		client->message.content = msg;
+		printf("Sending = [%s] to [%s]\n", msg, target);
 		send_message_to_client(clients, *client, actual, target);
-		free(tmp);
-		client->message.content = NULL;
-		client->message.len = 0;
+		client->message.content = tmp;
+// free(tmp);
+		// client->message.content = NULL;
+		// client->message.len = 0;
 	}
 }
 
