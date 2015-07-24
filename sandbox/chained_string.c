@@ -135,7 +135,7 @@ int							chained_string_cross(t_chained_string c1, t_chained_string c2)
 	t_list_string			*ptr;
 
 	if (!c1.list || !c2.list)
-		return (0);
+		return (!c1.list && !c2.list);
 	ptr = c1.list;
 	while (ptr)
 	{

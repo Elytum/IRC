@@ -84,17 +84,21 @@ void			command_join(t_client clients[MAX_CLIENTS], t_client *client, int actual)
 		send_string(client->sock, error, sizeof(error));
 	else
 	{
-		free(client->channel);
-		client->channel = strndup(ptr, size);
+		// free(client->channel);
+		char		*p;
+
+		p = strndup(ptr, size);
+		// client->channel = strndup(ptr, size);
 		len = sizeof(error) + size + sizeof(intro);
 		if (!(ptr = (char *)malloc(sizeof(char) * len)))
 			exit(1);
 		memcpy(ptr, intro, sizeof(intro) - 1);
-		memcpy(ptr + sizeof(intro) - 1, client->channel, size);
+		memcpy(ptr + sizeof(intro) - 1, p, size);
 		memcpy(ptr + sizeof(intro) - 1 + size, finish, sizeof(finish) - 1);
 		send_string(client->sock, ptr, len);
 
-		free(ptr);
+		push_allocated_chained_string(&(client->channels), ptr);	
+		// free(ptr);
 
 		size_t len;
 

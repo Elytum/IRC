@@ -71,6 +71,17 @@ void						push_hype_chained_string(t_chained_string *ptr, char *str)
 	ptr->size++;
 }
 
+void						push_allocated_chained_string(t_chained_string *ptr, char *str)
+{
+	t_list_string			*new_one;
+
+	new_one = stack_list_string(str);
+	new_one->flag = ALLOCATED;
+	new_one->next = ptr->list;
+	ptr->list = new_one;
+	ptr->size++;
+}
+
 char						*foreach_chained_string(t_chained_string *chained)
 {
 	char					*ret;

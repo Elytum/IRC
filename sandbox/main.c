@@ -30,12 +30,6 @@ void	test(void)
 
 	init_chained_string(&c1);
 	init_chained_string(&c2);
-	push_stack_chained_string(&c1, "?");
-	push_hype_chained_string(&c1, "Va");
-	push_hype_chained_string(&c1, "Ca");
-	push_hype_chained_string(&c1, "Comment");
-	push_stack_chained_string(&c1, "Bonjour");
-	push_stack_chained_string(&c2, NULL);
 	cross(c1, c2);
 	free_chained_string(&c1);
 	free_chained_string(&c2);
