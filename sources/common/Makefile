@@ -15,7 +15,8 @@ CC		=	gcc
 #--------------Name-------------------------#
 NAME = common
 #--------------Sources----------------------#
-SOURCES =	commands.c
+SOURCES =	commands.c			\
+			chained_string.c
 
 SRC = $(addprefix srcs/, $(SOURCES))
 
