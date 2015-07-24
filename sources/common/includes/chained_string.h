@@ -30,5 +30,6 @@ void						free_chained_string(t_chained_string *ptr);
 void						push_stack_chained_string(t_chained_string *ptr, char *str);
 void						push_hype_chained_string(t_chained_string *ptr, char *str);
 char						*foreach_chained_string(t_chained_string *chained);
+int							chained_string_contains(t_chained_string chained, char *str);
 void						put_chained_string(t_chained_string chained);
 void						init_chained_string(t_chained_string *chained);

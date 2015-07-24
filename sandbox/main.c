@@ -1,6 +1,16 @@
 #include <chained_string.h>
 #include <stdio.h>
 
+void	contains(t_chained_string chained, char *str)
+{
+	printf("Subject:\n");
+	put_chained_string(chained);
+	if (chained_string_contains(chained, str))
+		printf("It does contain [%s]\n", str);
+	else
+		printf("It does not contain [%s]\n", str);
+}
+
 void	test(void)
 {
 	t_chained_string	chained;
@@ -8,26 +18,16 @@ void	test(void)
 
 	init_chained_string(&chained);
 	push_stack_chained_string(&chained, "?");
+	contains(chained, "Ca");
 	push_hype_chained_string(&chained, "Va");
+	contains(chained, "Ca");
 	push_hype_chained_string(&chained, "Ca");
+	contains(chained, "Ca");
 	push_hype_chained_string(&chained, "Comment");
+	contains(chained, "Comment");
 	push_stack_chained_string(&chained, "Bonjour");
-	str = foreach_chained_string(&chained);
-	str = foreach_chained_string(&chained);
-	str = foreach_chained_string(&chained);
-	str = foreach_chained_string(&chained);
-	printf("Testing [%s]\n", str);
+	contains(chained, NULL);
 	put_chained_string(chained);
-
-	while ((str = foreach_chained_string(&chained)) != NULL)
-		printf("Found [%s]\n", str);
-	while ((str = foreach_chained_string(&chained)) != NULL)
-		printf("Found [%s]\n", str);
-	while ((str = foreach_chained_string(&chained)) != NULL)
-		printf("Found [%s]\n", str);
-	while ((str = foreach_chained_string(&chained)) != NULL)
-		printf("Found [%s]\n", str);
-
 	free_chained_string(&chained);
 	put_chained_string(chained);
 }

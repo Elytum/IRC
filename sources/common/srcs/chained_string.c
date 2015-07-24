@@ -115,6 +115,22 @@ void						put_chained_string(t_chained_string chained)
 	}
 }
 
+int							chained_string_contains(t_chained_string chained, char *str)
+{
+	t_list_string			*ptr;
+
+	if (!chained.list || !str)
+		return (0);
+	ptr = chained.list;
+	while (ptr)
+	{
+		if (!strcmp(ptr->string, str))
+			return (1);
+		ptr = ptr->next;
+	}
+	return (0);
+}
+
 void						init_chained_string(t_chained_string *chained)
 {
 	chained->list = NULL;
