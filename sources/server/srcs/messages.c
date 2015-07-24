@@ -44,7 +44,8 @@ void				send_neutrals(t_message message, const t_client *clients,
 	while (i < actual)
 	{
 		if (sender.sock != clients[i].sock && S_ISCONNECT(clients[i]) &&
-			ft_strmatch(sender.channel, clients[i].channel))
+			chained_string_contains(sender.channels, clients[i].channel)
+			// ft_strmatch(sender.channel, clients[i].channel))
 			send_message(clients[i].sock, message);
 		++i;
 	}
@@ -65,7 +66,8 @@ void				send_allies(t_message message, const t_client *clients,
 	while (i < actual)
 	{
 		if (sender.sock != clients[i].sock && S_ISCONNECT(clients[i]) &&
-			ft_strmatch(sender.channel, clients[i].channel))
+			chained_string_contains(sender.channels, clients[i].channel)
+			// ft_strmatch(sender.channel, clients[i].channel))
 			send_message(clients[i].sock, message);
 		++i;
 	}
@@ -86,7 +88,8 @@ void				send_enemies(t_message message, const t_client *clients,
 	while (i < actual)
 	{
 		if (sender.sock != clients[i].sock && S_ISCONNECT(clients[i]) &&
-			ft_strmatch(sender.channel, clients[i].channel))
+			chained_string_contains(sender.channels, clients[i].channel)
+			// ft_strmatch(sender.channel, clients[i].channel))
 			send_message(clients[i].sock, message);
 		++i;
 	}

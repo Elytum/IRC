@@ -12,7 +12,6 @@ t_list_string				*stack_list_string(char *str)
 	created->flag = NOT_ALLOCATED;
 	created->next = NULL;
 	return (created);
-
 }
 
 t_list_string				*hype_list_string(char *str)
@@ -100,7 +99,7 @@ void						put_chained_string(t_chained_string chained)
 
 	if (!chained.list)
 	{
-		printf("Contained nothing: Empty chained string\n");
+		printf("Contains nothing: Empty chained string\n");
 		return ;
 	}
 	ptr = chained.list;
@@ -124,7 +123,23 @@ int							chained_string_contains(t_chained_string chained, char *str)
 	ptr = chained.list;
 	while (ptr)
 	{
-		if (!strcmp(ptr->string, str))
+		if (ptr->string && !strcmp(ptr->string, str))
+			return (1);
+		ptr = ptr->next;
+	}
+	return (0);
+}
+
+int							chained_string_cross(t_chained_string c1, t_chained_string c2)
+{
+	t_list_string			*ptr;
+
+	if (!c1.list || !c2.list)
+		return (0);
+	ptr = c1.list;
+	while (ptr)
+	{
+		if (ptr->string && chained_string_contains(c2, ptr->string))
 			return (1);
 		ptr = ptr->next;
 	}

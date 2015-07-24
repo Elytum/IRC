@@ -1,7 +1,8 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "server.h"
+#include <server.h>
+#include <common.h>
 
 #define S_IFREADY 0b00000001
 #define S_ISREADY(m) (m.status & S_IFREADY)
@@ -29,12 +30,13 @@ typedef struct 		s_message
 
 typedef struct		s_client
 {
-	SOCKET			sock;
-	char			name[NAME_SIZE];
-	size_t			name_len;
-	size_t			status;
-	t_message		message;
-	char			*channel;
+	SOCKET				sock;
+	char				name[NAME_SIZE];
+	size_t				name_len;
+	size_t				status;
+	t_message			message;
+	// char				*channel;
+	t_chained_string	channels;
 }					t_client;
 
 #endif /* guard */
