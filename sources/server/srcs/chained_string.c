@@ -97,3 +97,19 @@ char						*foreach_chained_string(t_chained_string *chained)
 		chained->ptr = chained->list;
 	return (ret);
 }
+
+void						put_chained_string(t_chained_string *chained)
+{
+	t_list_string	*ptr;
+
+	dprintf(1, "put_chained_string called\n");
+	ptr = chained->list;
+	write(1, "Chained list content:\n", sizeof("Chained list content:\n") - 1);
+	while (*ptr)
+	{
+		write(1, "\t[", sizeof(("\t[") - 1);
+		write(1, ptr->string, strlen(ptr->string));
+		write(1, "]\n", sizeof(("]\n") - 1);
+	}
+	write(1, "\n", 1);
+}

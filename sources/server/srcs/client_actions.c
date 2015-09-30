@@ -97,7 +97,7 @@ void			command_join(t_client clients[MAX_CLIENTS], t_client *client, int actual)
 		memcpy(ptr + sizeof(intro) - 1 + size, finish, sizeof(finish) - 1);
 		send_string(client->sock, ptr, len);
 
-		push_allocated_chained_string(&(client->channels), ptr);	
+		push_allocated_chained_string(&(client->channels), p);	
 		// free(ptr);
 
 		size_t len;
