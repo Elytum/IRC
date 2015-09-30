@@ -187,7 +187,15 @@ void				send_message_to_all_clients(const t_client *clients,
 {
 	t_message		message;
 
+
+	dprintf(1, "Channels:\n");
 	put_chained_string(sender.channels);
+	dprintf(1, "Friends:\n");
+	put_chained_string(sender.friends);
+	dprintf(1, "Enemies:\n");
+	put_chained_string(sender.enemies);
+	dprintf(1, "\n");
+
 	message = prepare_neutral_message(sender);
 	send_neutrals(message, clients, sender, actual);
 	print_message(message);
@@ -201,7 +209,7 @@ void				send_message_to_client(const t_client *clients,
 {
 	t_message		message;
 
-	put_chained_string(sender.channels);
+								//	put_chained_string(sender.channels);
 	message = prepare_neutral_message(sender);
 	send_neutral(message, clients, actual, target);
 	print_message(message);

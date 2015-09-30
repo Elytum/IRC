@@ -35,3 +35,4 @@ int							chained_string_contains(t_chained_string chained, char *str);
 int							chained_string_cross(t_chained_string c1, t_chained_string c2);
 void						put_chained_string(t_chained_string chained);
 void						init_chained_string(t_chained_string *chained);
+int							chained_string_remove(t_chained_string *chained, char *str);

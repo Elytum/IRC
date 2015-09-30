@@ -146,6 +146,77 @@ void			command_msg(t_client clients[MAX_CLIENTS], t_client *client, int actual)
 	}
 }
 
+void			command_friend(t_client *client)
+{
+	const char	error[] = "Wrong format, should be \"/friend nickname\".\n";
+	char		*target;
+	char		*ptr;
+
+	target = client->message.content + sizeof("/friend");
+	while (*target == ' ' || *target == '\t' || *target == '\n')
+		target++;
+	ptr = target;
+	while (*ptr != '\n')
+		ptr++;
+	if (*ptr == '\n')
+		*ptr = '\0';
+	if (!*target)
+		send_string(client->sock, error, sizeof(error));
+	else
+	{
+		if (!(chained_string_contains(client->friends, target)))
+			push_allocated_chained_string(&(client->friends), strdup(target));
+		chained_string_remove(&(client->enemies), target);
+	}
+}
+
+void			command_enemy(t_client *client)
+{
+	const char	error[] = "Wrong format, should be \"/enemy nickname\".\n";
+	char		*target;
+	char		*ptr;
+
+	target = client->message.content + sizeof("/enemy");
+	while (*target == ' ' || *target == '\t' || *target == '\n')
+		target++;
+	ptr = target;
+	while (*ptr != '\n')
+		ptr++;
+	if (*ptr == '\n')
+		*ptr = '\0';
+	if (!*target)
+		send_string(client->sock, error, sizeof(error));
+	else
+	{
+		if (!(chained_string_contains(client->enemies, target)))
+			push_allocated_chained_string(&(client->enemies), strdup(target));
+		chained_string_remove(&(client->friends), target);
+	}
+}
+
+void			command_neutral(t_client *client)
+{
+	const char	error[] = "Wrong format, should be \"/neutral nickname\".\n";
+	char		*target;
+	char		*ptr;
+
+	target = client->message.content + sizeof("/neutral");
+	while (*target == ' ' || *target == '\t' || *target == '\n')
+		target++;
+	ptr = target;
+	while (*ptr != '\n')
+		ptr++;
+	if (*ptr == '\n')
+		*ptr = '\0';
+	if (!*target)
+		send_string(client->sock, error, sizeof(error));
+	else
+	{
+		chained_string_remove(&(client->friends), target);
+		chained_string_remove(&(client->enemies), target);
+	}
+}
+
 void			interprate_message(t_client clients[MAX_CLIENTS], t_client *client, int *actual)
 {
 	char	unknown[] = "Unknown command.\n";
@@ -156,8 +227,12 @@ void			interprate_message(t_client clients[MAX_CLIENTS], t_client *client, int *
 		if (client->message.content[0] == '/')
 		{
 			if (command_match(client->message.content + 1, "friend"))
-				write(1, "friend", sizeof("friend"));
-			if (command_match(client->message.content + 1, "room"))
+				command_friend(client);//write(1, "friend", sizeof("friend"));
+			else if (command_match(client->message.content + 1, "enemy"))
+				command_enemy(client);//write(1, "friend", sizeof("enemy"));
+			else if (command_match(client->message.content + 1, "neutral"))
+				command_neutral(client);//write(1, "friend", sizeof("neutral"));
+			else if (command_match(client->message.content + 1, "room"))
 				write(1, "room", sizeof("room"));
 			else if (command_match(client->message.content + 1, "nick"))
 				write(1, "nick", sizeof("nick"));

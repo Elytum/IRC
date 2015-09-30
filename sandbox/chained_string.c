@@ -26,6 +26,56 @@ t_list_string				*hype_list_string(char *str)
 	return (created);
 }
 
+int							chained_string_contains(t_chained_string chained, char *str)
+{
+	t_list_string			*ptr;
+
+	if (!chained.list || !str)
+		return (0);
+	ptr = chained.list;
+	while (ptr)
+	{
+		if (ptr->string && !strcmp(ptr->string, str))
+			return (1);
+		ptr = ptr->next;
+	}
+	return (0);
+}
+
+int							chained_string_remove(t_chained_string *chained, char *str)
+{
+	t_list_string			*ptr;
+	t_list_string			*tmp;
+
+	if (!chained->list || !str)
+		return (0);
+	if (chained->list->string && !strcmp(ptr->string, str))
+	{
+		tmp = chained->list;
+		chained->list = chained->list->next;
+		if (ptr->flag == ALLOCATED)
+			free(ptr->string);
+		free(ptr);
+		return (1);
+	}
+	tmp = chained->list;
+	ptr = tmp->next;
+	while (ptr)
+	{
+		if (ptr->string && !strcmp(ptr->string, str))
+		{
+			tmp->next = tmp->next->next;
+			if (ptr->flag == ALLOCATED)
+				free(ptr->string);
+			free(ptr);
+			return (1);
+		}
+		tmp = ptr;
+		ptr = ptr->next;
+	}
+	return (0);
+}
+
 void						free_list_string(t_list_string *list)
 {
 	t_list_string			*ptr;
@@ -55,6 +105,8 @@ void						push_stack_chained_string(t_chained_string *ptr, char *str)
 {
 	t_list_string			*new_one;
 
+	if (chained_string_contains(ptr, str))
+		break ;
 	new_one = stack_list_string(str);
 	new_one->next = ptr->list;
 	ptr->list = new_one;
@@ -65,6 +117,8 @@ void						push_hype_chained_string(t_chained_string *ptr, char *str)
 {
 	t_list_string			*new_one;
 
+	if (chained_string_contains(ptr, str))
+		break ;
 	new_one = hype_list_string(str);
 	new_one->next = ptr->list;
 	ptr->list = new_one;
@@ -112,22 +166,6 @@ void						put_chained_string(t_chained_string chained)
 			printf("\"%s\" }\n", ptr->string);
 		ptr = ptr->next;
 	}
-}
-
-int							chained_string_contains(t_chained_string chained, char *str)
-{
-	t_list_string			*ptr;
-
-	if (!chained.list || !str)
-		return (0);
-	ptr = chained.list;
-	while (ptr)
-	{
-		if (ptr->string && !strcmp(ptr->string, str))
-			return (1);
-		ptr = ptr->next;
-	}
-	return (0);
 }
 
 int							chained_string_cross(t_chained_string c1, t_chained_string c2)

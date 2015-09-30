@@ -164,3 +164,38 @@ void						init_chained_string(t_chained_string *chained)
 	chained->pos = 0;
 	chained->size = 0;
 }
+
+
+int							chained_string_remove(t_chained_string *chained, char *str)
+{
+	t_list_string			*ptr;
+	t_list_string			*tmp;
+
+	if (!chained->list || !str)
+		return (0);
+	if (chained->list->string && !strcmp(chained->list->string, str))
+	{
+		tmp = chained->list;
+		chained->list = chained->list->next;
+		if (tmp->flag == ALLOCATED)
+			free(tmp->string);
+		free(tmp);
+		return (1);
+	}
+	tmp = chained->list;
+	ptr = tmp->next;
+	while (ptr)
+	{
+		if (ptr->string && !strcmp(ptr->string, str))
+		{
+			tmp->next = tmp->next->next;
+			if (ptr->flag == ALLOCATED)
+				free(ptr->string);
+			free(ptr);
+			return (1);
+		}
+		tmp = ptr;
+		ptr = ptr->next;
+	}
+	return (0);
+}

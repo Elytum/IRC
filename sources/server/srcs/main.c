@@ -70,7 +70,11 @@ void				init_clients(t_client clients[MAX_CLIENTS])
 	memset((void *)clients, sizeof(t_client) * MAX_CLIENTS, 0);
 	i = 0;
 	while (i < MAX_CLIENTS)
+	{
+		init_chained_string(&(clients[i].friends));
+		init_chained_string(&(clients[i].enemies));
 		init_chained_string(&(clients[i++].channels));
+	}
 		// clients[i++].channel = NULL;
 }
 

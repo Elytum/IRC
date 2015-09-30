@@ -60,7 +60,6 @@ static void	update_message(t_message *message)
 	}
 	else if ((tmp = strchr(message->content, '\n')))
 	{
-		// *tmp = '\0';
 		message->len = tmp - message->content + 1;
 		message->effect = S_IFTALK;
 		message->status |= S_IFREADY;
